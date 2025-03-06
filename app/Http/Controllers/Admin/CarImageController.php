@@ -19,7 +19,7 @@ class CarImageController extends Controller
 {
     // Lấy danh sách xe chưa đủ 5 ảnh
     $cars = Car::whereDoesntHave('images', function ($query) {
-        $query->havingRaw('COUNT(*) >= 5');
+        $query->havingRaw('COUNT(*) >= 4');
     })->get();
 
     return view('admin.car_images.create', compact('cars'));
@@ -30,7 +30,7 @@ class CarImageController extends Controller
     {
         $request->validate([
             'car_id' => 'required|exists:cars,id',
-            'images' => 'required|array|max:5', // Tối đa 5 ảnh
+            'images' => 'required|array|max:4', // Tối đa 5 ảnh
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Kiểm tra từng ảnh
         ]);
     

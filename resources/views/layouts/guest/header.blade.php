@@ -62,12 +62,21 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.shop.index') }}">Shop Car</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('user.orders.index') }}">Order</a>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
                     </ul>
                     <div class="nav-right">
-                        <div class="search-btn">
-                            <button type="button" class="nav-right-link"><i class="far fa-search"></i></button>
+                        <div class="cart-btn">
+                            <a href="{{ route('user.favorites.index') }}" class="nav-right-link">
+                                <i class="far fa-heart"></i>
+                                <span
+                                    class="favorite-count">{{ \App\Models\Favorite::where('user_id', Auth::id())->count() }}</span>
+                            </a>
+
+
                         </div>
                         <div class="cart-btn">
                             <a href="{{ route('cart.index') }}" class="nav-right-link">
@@ -75,10 +84,21 @@
                                 <span>{{ collect(session('cart', []))->sum('quantity') }}</span>
                             </a>
                         </div>
+                        @auth
+                            <div class="profile-btn">
+                                <a href="{{ route('profile.index') }}" class="nav-right-link">
+                                    <i class="far fa-user"></i> <!-- Bạn có thể thay đổi icon nếu muốn -->
+                                </a>
+                            </div>
+                        @endauth
                         <div class="sidebar-btn">
                             <button type="button" class="nav-right-link"><i class="far fa-bars-sort"></i></button>
                         </div>
+
+
+
                     </div>
+
                 </div>
                 <!-- search area -->
                 <div class="search-area">

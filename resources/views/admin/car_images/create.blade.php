@@ -22,13 +22,12 @@
                                 <option value="" disabled>Không còn xe để thêm ảnh</option>
                             @endforelse
                         </select>
-
                     </div>
 
-                    <!-- Hiển thị 5 ô ảnh và 5 nút chọn ảnh -->
+                    <!-- Hiển thị 4 ô ảnh và 4 nút chọn ảnh -->
                     <div class="row text-center mb-4">
-                        @for ($i = 0; $i < 5; $i++)
-                            <div class="col-md-2 col-6 mb-3">
+                        @for ($i = 0; $i < 4; $i++) {{-- Chỉ hiển thị 4 ô thay vì 5 --}}
+                            <div class="col-md-3 col-6 mb-3">
                                 <div class="image-preview border p-2 rounded shadow-sm" id="preview-{{ $i }}">
                                     <img src="https://via.placeholder.com/100" alt="Ảnh {{ $i + 1 }}" id="img-{{ $i }}"
                                         class="img-thumbnail">
@@ -43,9 +42,9 @@
                         @endfor
                     </div>
 
-                    <!-- Cảnh báo nếu chưa chọn đủ 5 ảnh -->
+                    <!-- Cảnh báo nếu chưa chọn đủ 4 ảnh -->
                     <div id="warningMessage" class="alert alert-warning text-center d-none">
-                        Vui lòng chọn đủ <strong>5 ảnh</strong> trước khi tải lên.
+                        Vui lòng chọn đủ <strong>4 ảnh</strong> trước khi tải lên.
                     </div>
 
                     <!-- Nút tải ảnh lên -->
@@ -74,7 +73,7 @@
 
         function checkImages() {
             let count = 0;
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 4; i++) { {{-- Chỉ kiểm tra 4 ảnh --}}
                 if (document.getElementById('image-' + i).files.length > 0) {
                     count++;
                 }
@@ -82,7 +81,7 @@
             let warningMessage = document.getElementById('warningMessage');
             let uploadBtn = document.getElementById('uploadBtn');
 
-            if (count === 5) {
+            if (count === 4) { {{-- Đủ 4 ảnh thì mở khóa nút --}}
                 uploadBtn.disabled = false;
                 warningMessage.classList.add('d-none');
             } else {

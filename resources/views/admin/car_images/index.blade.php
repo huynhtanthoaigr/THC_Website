@@ -34,8 +34,8 @@
                         <td class="text-primary fw-semibold">{{ $images->first()->car->name ?? 'N/A' }}</td>
                         <td>
                             <div class="d-flex flex-wrap justify-content-center">
-                                @foreach($images->take(5) as $image)
-                                    <img src="{{ asset('storage/' . $image->image_url) }}" class="img-thumbnail shadow-sm me-2 mb-2" width="100">
+                                @foreach($images->take(4) as $image)
+                                    <img src="{{ asset('storage/' . $image->image_url) }}" class="img-thumbnail shadow-sm me-2 mb-2" style="width: 120px; height: 80px; object-fit: cover;">
                                 @endforeach
                             </div>
                         </td>

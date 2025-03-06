@@ -28,19 +28,23 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="fullName" class="form-label">Họ Tên *</label>
-                                <input type="text" class="form-control" id="fullName" name="fullName" required>
+                                <input type="text" class="form-control" id="fullName" name="fullName"
+                                    value="{{ $user->name }}" required readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="{{ $user->email }}" required readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Số Điện Thoại *</label>
-                                <input type="text" class="form-control" id="phone" name="phone" required>
+                                <input type="text" class="form-control" id="phone" name="phone"
+                                    value="{{ $user->phone }}" required readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="viewAddress" class="form-label">Địa Chỉ Xem Xe *</label>
-                                <input type="text" class="form-control" id="viewAddress" name="viewAddress" required>
+                                <input type="text" class="form-control" id="viewAddress" name="viewAddress"
+                                    value="{{ $companyAddress }}" required readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="notes" class="form-label">Ghi Chú (nếu có)</label>

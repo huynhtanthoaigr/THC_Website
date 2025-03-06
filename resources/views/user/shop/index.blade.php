@@ -29,7 +29,7 @@
                                         <div class="form-group">
                                             <input type="text" name="search" class="form-control"
                                                 placeholder="Nhập tên xe..." value="{{ request('search') }}">
-                                            <button type="submit" >
+                                            <button type="submit">
                                                 <i class="far fa-search"></i>
                                             </button>
                                         </div>
@@ -99,11 +99,6 @@
                             <div class="car-sort">
                                 <h6>Showing {{ $cars->firstItem() }}-{{ $cars->lastItem() }} of {{ $cars->total() }} Results
                                 </h6>
-                                <div class="car-sort-list-grid">
-                                    <a class="car-sort-grid active" href="listing-grid.html"><i
-                                            class="far fa-grid-2"></i></a>
-                                    <a class="car-sort-list" href="listing-list.html"><i class="far fa-list-ul"></i></a>
-                                </div>
                                 <div class="col-md-3 car-sort-box">
                                     <select class="select">
                                         <option value="1">Sort By Default</option>
@@ -124,18 +119,25 @@
                                             <span class="car-status status-1">{{ $car->status }}</span>
 
                                             @if ($car->images && $car->images->isNotEmpty())
-                                                <!-- Kiểm tra nếu images không null và không trống -->
                                                 <img src="{{ asset('storage/' . $car->images->first()->image_url) }}"
                                                     alt="{{ $car->name }}">
                                             @else
                                                 <img src="{{ asset('storage/default-image.jpg') }}" alt="No image available">
                                             @endif
 
+                                            <!-- Button yêu thích & làm mới -->
                                             <div class="car-btns">
-                                                <a href="#"><i class="far fa-heart"></i></a>
-                                                <a href="#"><i class="far fa-arrows-repeat"></i></a>
+                                                <form action="{{ route('user.favorites.store', $car->id) }}" method="POST"
+                                                    class="favorite-form">
+                                                    @csrf
+                                                    <button type="submit" class="favorite-btn">
+                                                        <i class="far fa-heart"></i>
+                                                    </button>
+                                                </form>
                                             </div>
+
                                         </div>
+
 
                                         <div class="car-content">
                                             <div class="car-top">
@@ -180,3 +182,62 @@
         </div>
     </main>
 @endsection
+<style>
+    .car-btns {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 8px;
+    }
+
+    .car-btns .favorite-form {
+        margin: 0;
+    }
+
+    .car-btns .favorite-btn {
+        width: 40px;
+        height: 40px;
+        background-color: rgba(237, 29, 38, 0.9);
+        /* Màu đỏ */
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .car-btns .favorite-btn:hover {
+        background-color: rgba(237, 29, 38, 1);
+    }
+
+    .car-btns .favorite-btn i {
+        font-size: 18px;
+        color: white;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".favorite-btn").click(function (e) {
+            e.preventDefault(); // Ngăn chặn load lại trang
+
+            var form = $(this).closest("form");
+
+            $.ajax({
+                url: form.attr("action"),
+                type: "POST",
+                data: form.serialize(),
+                success: function (response) {
+                    alert(response.message);
+                    $(".favorite-count").text(response.count); // Cập nhật số lượng yêu thích
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra, vui lòng thử lại!");
+                }
+            });
+        });
+    });
+</script>

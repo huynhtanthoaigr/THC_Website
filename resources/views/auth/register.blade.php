@@ -18,7 +18,7 @@
                     <div class="login-form">
                         <div class="login-header">
                             <img src="{{ asset('assets/img/logo/logo.png') }}" alt="">
-                            <p>Create your motex account</p>
+                            <p>Create your Motex account</p>
                         </div>
 
                         @if ($errors->any())
@@ -56,11 +56,16 @@
                                             placeholder="Your Phone" required>
                                     </div>
                                 </div>
+                                
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Address</label>
-                                        <input type="text" class="form-control" name="address" value="{{ old('address') }}"
-                                            placeholder="Your Address" required>
+                                        <label>Gender</label>
+                                        <select class="form-control" name="gender" required>
+                                            <option value="" disabled selected>Select Gender</option>
+                                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                            <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -96,7 +101,6 @@
                                 </div>
                             </div>
                         </form>
-
 
                         <div class="login-footer">
                             <p>Already have an account? <a href="{{ route('login') }}">Login.</a></p>

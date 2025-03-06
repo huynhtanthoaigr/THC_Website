@@ -51,29 +51,30 @@ class AuthController extends Controller
     }
 
     public function register(Request $request)
-    {
-        $request->validate([
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:users',
-            'phone'   => 'required|numeric|digits_between:10,15|unique:users',
-            'password'=> 'required|min:6|confirmed',
-            'address' => 'required|string|max:255',
-        ]);
+{
+    $request->validate([
+        'name'     => 'required|string|max:255',
+        'email'    => 'required|email|unique:users',
+        'phone'    => 'required|numeric|digits_between:10,15|unique:users',
+        'password' => 'required|min:6|confirmed',
+        'gender'   => 'required|in:male,female,other',
+    ]);
 
-        $user = User::create([
-            'name'    => $request->name,
-            'email'   => $request->email,
-            'phone'   => $request->phone,
-            'password'=> Hash::make($request->password),
-            'address' => $request->address,
-        ]);
+    $user = User::create([
+        'name'     => $request->name,
+        'email'    => $request->email,
+        'phone'    => $request->phone,
+        'password' => Hash::make($request->password),
+        'gender'   => $request->gender,
+    ]);
 
-        // Gán quyền cho user mới đăng ký: nếu email chứa 'admin' thì admin, ngược lại là user
-        $role = (str_contains($request->email, 'admin')) ? 'admin' : 'user';
-        $user->assignRole($role);
+    // Gán quyền dựa trên email
+    $role = (str_contains($request->email, 'admin')) ? 'admin' : 'user';
+    $user->assignRole($role);
 
-        return redirect()->route('login')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
-    }
+    return redirect()->route('login')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
+}
+
 
     public function logout()
     {
