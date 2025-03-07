@@ -2,53 +2,82 @@
 
 @section('content')
 <div class="container-fluid">
-    <h2 class="mt-3">Chỉnh Sửa Thông Tin Công Ty</h2>
+    <div class="card shadow-sm p-4">
+        <h2 class="text-center text-primary mb-4">
+            <i class="fas fa-edit"></i> Chỉnh Sửa Thông Tin Công Ty
+        </h2>
 
-    @if(session('success'))
-        <div class="alert alert-success" id="success-message">
-            {{ session('success') }}
-        </div>
-    @endif
+        {{-- Hiển thị thông báo thành công --}}
+        @if(session('success'))
+            <div class="alert alert-success text-center" id="success-message">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            </div>
+        @endif
 
-    <form action="{{ route('admin.company.update') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="card p-3">
-            <div class="text-center mb-3">
-                @if(!empty($company->logo))
-                    <img src="{{ asset('storage/' . $company->logo) }}" alt="Logo Công Ty" class="img-fluid rounded shadow-sm" style="max-height: 150px;">
-                @else
-                    <p class="text-muted">Chưa có logo</p>
-                @endif
+        <form action="{{ route('admin.company.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row">
+                {{-- Logo Công Ty --}}
+                <div class="col-md-4 text-center mb-3">
+                    @if(!empty($company->logo))
+                        <img src="{{ asset('storage/' . $company->logo) }}" 
+                             alt="Logo Công Ty" 
+                             class="img-thumbnail shadow-sm rounded-circle" 
+                             style="max-width: 180px;">
+                    @else
+                        <div class="d-flex align-items-center justify-content-center border rounded-circle" 
+                             style="width: 180px; height: 180px; background-color: #f8f9fa;">
+                            <i class="fas fa-image text-muted fa-3x"></i>
+                        </div>
+                    @endif
+                    <label for="logo" class="form-label mt-3">
+                        <i class="fas fa-upload"></i> Cập Nhật Logo
+                    </label>
+                    <input type="file" class="form-control" name="logo" accept="image/*">
+                </div>
+
+                {{-- Form Nhập Liệu --}}
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-building"></i> Tên Công Ty
+                        </label>
+                        <input type="text" class="form-control" name="name" value="{{ $company->name ?? '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input type="email" class="form-control" name="email" value="{{ $company->email ?? '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">
+                            <i class="fas fa-phone"></i> Số Điện Thoại
+                        </label>
+                        <input type="text" class="form-control" name="phone" value="{{ $company->phone ?? '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">
+                            <i class="fas fa-map-marker-alt"></i> Địa Chỉ
+                        </label>
+                        <textarea class="form-control" name="address" required>{{ $company->address ?? '' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="website" class="form-label">
+                            <i class="fas fa-globe"></i> Website
+                        </label>
+                        <input type="text" class="form-control" name="website" value="{{ $company->website ?? '' }}">
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="logo" class="form-label">Logo Công Ty</label>
-                <input type="file" class="form-control" name="logo" accept="image/*">
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Cập Nhật
+                </button>
             </div>
-
-            <div class="mb-3">
-                <label for="name" class="form-label">Tên Công Ty</label>
-                <input type="text" class="form-control" name="name" value="{{ $company->name ?? '' }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" value="{{ $company->email ?? '' }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label">Số Điện Thoại</label>
-                <input type="text" class="form-control" name="phone" value="{{ $company->phone ?? '' }}">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Địa Chỉ</label>
-                <textarea class="form-control" name="address" required>{{ $company->address ?? '' }}</textarea>
-            </div>
-            <div class="mb-3">
-                <label for="website" class="form-label">Website</label>
-                <input type="text" class="form-control" name="website" value="{{ $company->website ?? '' }}">
-            </div>
-            <button type="submit" class="btn btn-primary">Cập Nhật</button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 {{-- Ẩn thông báo sau 5 giây --}}

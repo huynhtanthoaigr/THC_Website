@@ -86,7 +86,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/profile', [ProfileController::class, 'adminProfile'])->name('admin.profile'); // Hồ sơ Admin
     Route::get('/admin/profile/edit', [ProfileController::class, 'editAdmin'])->name('profile.edit.admin'); // Chỉnh sửa hồ sơ Admin
     Route::put('/admin/profile', [ProfileController::class, 'updateAdmin'])->name('admin.profile.update'); // Cập nhật hồ sơ Admin
-
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('password.update');
 });
 
@@ -120,4 +119,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('user.favorites.index');
     Route::post('/favorites/{car}', [FavoriteController::class, 'store'])->name('user.favorites.store');
     Route::delete('/favorites/{car}', [FavoriteController::class, 'destroy'])->name('user.favorites.destroy');
+});
+use App\Http\Controllers\Admin\BlogCategoryController;
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('blog_categories', BlogCategoryController::class);
+});
+
+use App\Http\Controllers\Admin\BlogController;
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('blogs', BlogController::class);
 });

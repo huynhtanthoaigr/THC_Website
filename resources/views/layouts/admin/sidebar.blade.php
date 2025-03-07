@@ -88,13 +88,43 @@
             <span class="caret"></span>
           </a>
           <div class="collapse" id="order">
-          <ul class="nav nav-collapse">
-    <li>
-        <a href="{{ route('admin.orders.index') }}">
-            <span class="sub-item">Orders</span>
-        </a>
-    </li>
-</ul>
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{{ route('admin.orders.index') }}">
+                  <span class="sub-item">Orders</span>
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </li>
+        <li class="nav-section">
+          <span class="sidebar-mini-icon">
+            <i class="fa fa-ellipsis-h"></i>
+          </span>
+          <h4 class="text-section">Manager Information</h4>
+        </li>
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#Blogs">
+            <i class="fas fa-trademark"></i>
+            <p>Manager Blogs</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="Blogs">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{{ route('admin.blog_categories.index') }}">
+                  <span class="sub-item">Categories Blogs</span>
+                </a>
+
+              </li>
+              <li>
+                <a href="{{ route('admin.blogs.index') }}">
+                  <span class="sub-item">Blogs</span>
+                </a>
+
+              </li>
+            </ul>
 
           </div>
         </li>
