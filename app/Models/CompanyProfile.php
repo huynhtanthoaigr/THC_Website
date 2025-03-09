@@ -8,5 +8,6 @@ class CompanyProfile extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'email', 'phone', 'address', 'website', 'logo'];
+    protected $fillable = ['name', 'email', 'phone', 'address', 'website', 'logo', 'opening_hours'];
+
 }

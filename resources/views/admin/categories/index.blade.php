@@ -18,35 +18,44 @@
 
     <div class="table-responsive">
         <table class="table table-bordered text-center table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th><i class="fas fa-tag"></i> Tên danh mục</th>
-                    <th><i class="fas fa-align-left"></i> Mô tả</th>
-                    <th><i class="fas fa-cogs"></i> Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($categories as $category)
-                <tr>
-                    <td>{{ $category->id }}</td>
-                    <td>{{ $category->name }}</td>
-                    <td>{{ $category->description }}</td>
-                    <td>
-                        <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Sửa
-                        </a>
-                        <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">
-                                <i class="fas fa-trash-alt"></i> Xóa
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
+        <thead class="table-dark">
+    <tr>
+        <th>ID</th>
+        <th>Hình ảnh</th>
+        <th>Tên danh mục</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach($categories as $category)
+    <tr>
+        <td>{{ $category->id }}</td>
+        <td>
+            @if($category->image)
+                <img src="{{ asset('storage/' . $category->image) }}" class="img-thumbnail" width="80">
+            @else
+                <span class="text-muted">Chưa có ảnh</span>
+            @endif
+        </td>
+        <td>{{ $category->name }}</td>
+        <td>{{ $category->description }}</td>
+        <td>
+    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-warning btn-sm">
+        <i class="fas fa-edit"></i> Sửa
+    </a>
+    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" style="display:inline-block;">
+        @csrf @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Xóa danh mục này?')">
+            <i class="fas fa-trash-alt"></i> Xóa
+        </button>
+    </form>
+</td>
+
+    </tr>
+    @endforeach
+</tbody>
+
         </table>
     </div>
 </div>

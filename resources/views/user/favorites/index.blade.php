@@ -39,7 +39,7 @@
                                 <h4><a href="#">{{ $favorite->car->name }}</a></h4>
                                 <ul class="car-list">
                                     <li><i class="far fa-steering-wheel"></i>{{ $favorite->car->transmission }}</li>
-                                    <li><i class="far fa-road"></i>{{ $favorite->car->fuel_efficiency }} / 1-litre</li>
+                                    <li><i class="far fa-road"></i>{{ $favorite->car->mileage }}</li>
                                     <li><i class="far fa-car"></i>Model: {{ $favorite->car->model_year }}</li>
                                     <li><i class="far fa-gas-pump"></i>{{ $favorite->car->fuel_type }}</li>
                                 </ul>

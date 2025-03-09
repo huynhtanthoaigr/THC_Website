@@ -34,54 +34,62 @@
             </nav>
 
             <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-                <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                        aria-expanded="false" aria-haspopup="true">
-                        <i class="fa fa-search"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-search animated fadeIn">
-                        <form class="navbar-left navbar-form nav-search">
-                            <div class="input-group">
-                                <input type="text" placeholder="Search ..." class="form-control" />
-                            </div>
-                        </form>
-                    </ul>
-                </li>
                 <li class="nav-item topbar-icon dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-envelope"></i>
+                        @php
+                            $unreadMessages = \App\Models\ContactMessage::where('is_read', false)->count();
+                        @endphp
+                        @if ($unreadMessages > 0)
+                            <span class="notification">{{ $unreadMessages }}</span>
+                        @endif
+
                     </a>
                     <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
                         <li>
                             <div class="dropdown-title d-flex justify-content-between align-items-center">
-                                Messages
-                                <a href="#" class="small">Mark all as read</a>
+                                Tin nhắn mới
+                                <a href="{{ route('admin.messages') }}" class="small">Xem tất cả</a>
                             </div>
                         </li>
                         <li>
                             <div class="message-notif-scroll scrollbar-outer">
                                 <div class="notif-center">
-                                    <a href="#">
-                                        <div class="notif-img">
-                                            <img src="assets/img/jm_denis.jpg" alt="Img Profile" />
-                                        </div>
-                                        <div class="notif-content">
-                                            <span class="subject">Jimmy Denis</span>
-                                            <span class="block"> How are you ? </span>
-                                            <span class="time">5 minutes ago</span>
-                                        </div>
-                                    </a>
+                                    @php
+                                        use App\Models\User;
+                                        $latestMessages = \App\Models\ContactMessage::where('is_read', false)->latest()->limit(5)->get();
+                                    @endphp
+
+                                    @foreach ($latestMessages as $message)
+                                                                        @php
+                                                                            $user = User::where('email', $message->email)->first();
+                                                                            $avatar = $user ? $user->avatar_url : asset('assets/img/user-default.png');
+                                                                        @endphp
+                                                                        <a href="{{ route('admin.messages.show', $message->id) }}">
+                                                                            <div class="notif-img">
+                                                                                <img src="{{ $avatar }}" alt="User Image">
+                                                                            </div>
+                                                                            <div class="notif-content">
+                                                                                <span class="subject">{{ $message->name }}</span>
+                                                                                <span class="block">{{ Str::limit($message->message, 50) }}</span>
+                                                                                <span class="time">{{ $message->created_at->diffForHumans() }}</span>
+                                                                            </div>
+                                                                        </a>
+                                    @endforeach
+                                    @if ($latestMessages->isEmpty())
+                                        <p class="text-center p-2">Không có tin nhắn mới</p>
+                                    @endif
                                 </div>
                             </div>
                         </li>
                         <li>
-                            <a class="see-all" href="javascript:void(0);">See all messages<i
-                                    class="fa fa-angle-right"></i>
-                            </a>
+                            <a class="see-all" href="{{ route('admin.messages') }}">Xem tất cả tin nhắn<i
+                                    class="fa fa-angle-right"></i></a>
                         </li>
                     </ul>
                 </li>
+
                 <li class="nav-item topbar-icon dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -216,10 +224,10 @@
                 <li class="nav-item topbar-user dropdown hidden-caret">
                     <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                         <div class="avatar-sm">
-                            <img src="{{ asset('storage/avatars/' . Auth::user()->avatar) }}"
-                                alt="Admin Avatar" class="avatar-img rounded-circle" />
+                            <img src="{{ asset('storage/avatars/' . Auth::user()->avatar) }}" alt="Admin Avatar"
+                                class="avatar-img rounded-circle" />
                         </div>
-                    
+
                         <span class="profile-username">
                             <span class="op-7">Hi,</span>
                             <span class="fw-bold">{{ Auth::user()->name }}</span>

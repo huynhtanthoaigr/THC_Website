@@ -3,8 +3,15 @@
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
       <a href="index.html" class="logo">
-        <img src="assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+        @if(!empty($company->logo))
+      <img src="{{ asset('storage/' . $company->logo) }}" alt="Logo Công Ty"
+        class="img-thumbnail shadow-sm rounded-circle" style="max-width: 200px;">
+    @else
+    <!-- Hiển thị ảnh mặc định hoặc khung trống -->
+  @endif
+
       </a>
+
       <div class="nav-toggle">
         <button class="btn btn-toggle toggle-sidebar">
           <i class="gg-menu-right"></i>
@@ -145,6 +152,33 @@
               <li>
                 <a href="{{ route('admin.company.index') }}">
                   <span class="sub-item">Company Information</span>
+                </a>
+                <a href="{{ route('admin.about.index') }}">
+                  <span class="sub-item">Abouts</span>
+                </a>
+
+              </li>
+            </ul>
+          </div>
+
+        </li>
+        <li class="nav-section">
+          <span class="sidebar-mini-icon">
+            <i class="fa fa-ellipsis-h"></i>
+          </span>
+          <h4 class="text-section">Managers Messages </h4>
+        </li>
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#manager">
+            <i class="fas fa-trademark"></i>
+            <p>Messages</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="manager">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{{ route('admin.messages') }}">
+                  <span class="sub-item">Messages Contact</span>
                 </a>
               </li>
             </ul>

@@ -58,15 +58,20 @@
                 </div>
                 <div class="collapse navbar-collapse" id="main_nav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="\">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.shop.index') }}">Shop Car</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.orders.index') }}">Order</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('user.about') }}">About</a>
+                        </li>
+
+                        <li class="nav-item"><a class="nav-link" href="{{ route('blogs.index') }}">Blogs</a></li>
+
+                        <li class="nav-item"><a class="nav-link" href="{{ route('user.contact') }}">Contact</a></li>
                     </ul>
                     <div class="nav-right">
                         <div class="cart-btn">
@@ -84,6 +89,7 @@
                                 <span>{{ collect(session('cart', []))->sum('quantity') }}</span>
                             </a>
                         </div>
+                        
                         @auth
                             <div class="profile-btn">
                                 <a href="{{ route('profile.index') }}" class="nav-right-link">
@@ -94,9 +100,6 @@
                         <div class="sidebar-btn">
                             <button type="button" class="nav-right-link"><i class="far fa-bars-sort"></i></button>
                         </div>
-
-
-
                     </div>
 
                 </div>

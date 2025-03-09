@@ -19,32 +19,42 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('admin.blog_categories.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="name" class="form-label fw-bold">Tên danh mục</label>
-                            <input type="text" name="name" id="name" class="form-control" required onkeyup="generateSlug()">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="slug" class="form-label fw-bold">Slug</label>
-                            <input type="text" name="slug" id="slug" class="form-control" required>
-                        </div>
+                    <form action="{{ route('admin.blog_categories.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="mb-3">
+        <label for="name" class="form-label fw-bold">Tên danh mục</label>
+        <input type="text" name="name" id="name" class="form-control" required onkeyup="generateSlug()">
+    </div>
+    
+    <div class="mb-3">
+        <label for="slug" class="form-label fw-bold">Slug</label>
+        <input type="text" name="slug" id="slug" class="form-control" required>
+    </div>
 
-                        <div class="mb-3">
-                            <label for="description" class="form-label fw-bold">Mô tả</label>
-                            <textarea name="description" id="description" class="form-control" rows="3"></textarea>
-                        </div>
+    <div class="mb-3">
+        <label for="description" class="form-label fw-bold">Mô tả</label>
+        <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+    </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('admin.blog_categories.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Quay lại
-                            </a>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save"></i> Tạo mới
-                            </button>
-                        </div>
-                    </form>
+    <!-- Upload ảnh -->
+    <div class="mb-3">
+        <label for="image" class="form-label fw-bold">Ảnh danh mục</label>
+        <input type="file" name="image" id="image" class="form-control" accept="image/*" onchange="previewImage(event)">
+        <div class="mt-2">
+            <img id="imagePreview" src="#" alt="Ảnh xem trước" class="img-fluid d-none" style="max-width: 200px; border: 1px solid #ddd; padding: 5px;">
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{{ route('admin.blog_categories.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> Tạo mới
+        </button>
+    </div>
+</form>
+
                 </div>
             </div>
         </div>

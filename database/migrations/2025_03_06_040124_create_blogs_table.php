@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // Khóa ngoại
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
+            $table->foreign('category_id')->references('id')->on('blog_categories')->onDelete('set null');
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

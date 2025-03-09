@@ -3611,10 +3611,7 @@ label {
   transform: translateY(-7px);
 }
 
-.category-img{
-  width: 100px;
-  margin: 0 auto;
-}
+
 
 .category-item h5{
   transition: var(--transition);
@@ -3624,6 +3621,41 @@ label {
   color: var(--theme-color);
 }
 
+.car-category .category-img {
+  width: 100%;
+  height: 100px; /* Đảm bảo chiều cao ảnh cố định */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f8f8f8; /* Màu nền để tránh lỗi hiển thị */
+  border-radius: 10px; /* Bo góc nhẹ */
+}
+
+.car-category .category-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo ảnh luôn vừa khung mà không bị méo */
+  transition: transform 0.3s ease-in-out; /* Hiệu ứng hover */
+}
+
+.car-category .category-img img:hover {
+  transform: scale(1.1); /* Hiệu ứng phóng to nhẹ khi hover */
+}
+
+.car-category .category-item {
+  text-align: center;
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.car-category h5 {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
 
 
 
@@ -3787,17 +3819,14 @@ label {
   transform: translateY(-7px);
 }
 
-.brand-img{
-  margin: 0 auto;
-}
-
-.brand-item h5{
-  margin-bottom: 20px;
-  transition: var(--transition);
-}
-
-.brand-item:hover h5{
-  color: var(--theme-color);
+.brand-img {
+  width: 100%; /* Chiều rộng cố định */
+  height: 100px; /* Chiều cao cố định */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Cắt ảnh dư thừa */
+  border-radius: 10px; /* Bo góc nhẹ */
 }
 
 

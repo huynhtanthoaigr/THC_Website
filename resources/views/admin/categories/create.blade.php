@@ -15,20 +15,23 @@
 
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <form action="{{ route('admin.categories.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="name" class="form-label"><i class="fas fa-tag"></i> Tên danh mục</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label"><i class="fas fa-align-left"></i> Mô tả</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Thêm</button>
-                        </div>
-                    </form>
+                <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="mb-3">
+        <label for="name">Tên danh mục</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+        <label for="description">Mô tả</label>
+        <textarea class="form-control" id="description" name="description"></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="image">Hình ảnh</label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+    </div>
+    <button type="submit" class="btn btn-success">Thêm</button>
+</form>
+
                 </div>
             </div>
         </div>

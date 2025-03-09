@@ -12,6 +12,12 @@ use App\Http\Controllers\User\ShopController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\Admin\CompanyProfileController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\User\OrderController;
+use App\Http\Controllers\User\FavoriteController;
+use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\Admin\MessageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,20 +49,20 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard')->middleware('role:admin');
 });
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
 });
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['role:admin'])->group(function () {
     Route::resource('brands', BrandController::class)->except(['show', 'create', 'edit']);
 });
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('cars', CarController::class);
 });
 
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->middleware(['role:admin'])->group(function () {
     Route::resource('car_images', CarImageController::class)->names('admin.car_images');
 });
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(function () {
     Route::resource('car_details', CarDetailController::class);
 });
 
@@ -90,19 +96,19 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['role:admin'])->prefix('admin')->group(function () {
     Route::get('/company', [CompanyProfileController::class, 'index'])->name('admin.company.index');
     Route::get('/company/edit', [CompanyProfileController::class, 'edit'])->name('admin.company.edit');
     Route::post('/company/update', [CompanyProfileController::class, 'update'])->name('admin.company.update');
 });
-use App\Http\Controllers\Admin\AdminOrderController;
 
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+
+Route::prefix('admin')->middleware(['role:admin'])->group(function () {
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });
-use App\Http\Controllers\User\OrderController;
+
 
 Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(function() {
     // Route để hiển thị danh sách đơn hàng
@@ -111,7 +117,6 @@ Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(fu
     // Route để hiển thị chi tiết đơn hàng
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
-use App\Http\Controllers\User\FavoriteController;
 
 
 
@@ -122,12 +127,45 @@ Route::middleware(['auth'])->group(function () {
 });
 use App\Http\Controllers\Admin\BlogCategoryController;
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(function () {
     Route::resource('blog_categories', BlogCategoryController::class);
 });
 
-use App\Http\Controllers\Admin\BlogController;
-
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(function () {
     Route::resource('blogs', BlogController::class);
 });
+
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/blog/{slug}', [App\Http\Controllers\User\BlogController::class, 'show'])
+    ->name('user.blog.detail');
+Route::get('/category/{slug}', [App\Http\Controllers\User\BlogController::class, 'category'])->name('user.blog.category');
+Route::get('/blogs', [App\Http\Controllers\User\BlogController::class, 'index'])->name('blogs.index');
+
+use App\Http\Controllers\Admin\AboutController;
+
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/about', [AboutController::class, 'index'])->name('admin.about.index');
+    Route::get('/about/edit', [AboutController::class, 'edit'])->name('admin.about.edit');
+    Route::post('/about/update', [AboutController::class, 'update'])->name('admin.about.update');
+});
+
+Route::get('/about', [App\Http\Controllers\User\AboutController::class, 'index'])->name('user.about');
+Route::get('/reviews/create/{order_id}', [App\Http\Controllers\User\ReviewController::class, 'create'])->name('user.reviews.create');
+Route::post('/reviews/store', [App\Http\Controllers\User\ReviewController::class, 'store'])->name('user.reviews.store');
+
+use App\Http\Controllers\User\ContactController;
+
+Route::get('/contact', [ContactController::class, 'index'])->name('user.contact');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/messages', [MessageController::class, 'index'])->name('admin.messages');
+    Route::get('/messages/{id}', [MessageController::class, 'show'])->name('admin.messages.show');
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('admin.messages.destroy');
+});
+use App\Http\Controllers\ChatbotController;
+
+Route::post('/chatbot/send-message', [ChatbotController::class, 'sendMessage']);

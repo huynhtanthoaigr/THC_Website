@@ -31,7 +31,7 @@
                             <td><strong>Trạng thái:</strong></td>
                             <td>
                                 <span class="badge 
-                                {{ $order->status == 'confirmed' ? 'bg-success' :
+                                        {{ $order->status == 'confirmed' ? 'bg-success' :
         ($order->status == 'processing' ? 'bg-warning' : 'bg-secondary') }}">
                                     {{ ucfirst($order->status) }}
                                 </span>
@@ -70,10 +70,32 @@
                 </table>
             </div>
 
-            <a href="{{ route('user.orders.index') }}" class="btn"
-                style="background-color: #ed1d26; color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px; margin-bottom: 20px;">
-                Quay lại danh sách đơn hàng
+            <div class="d-flex  gap-3 mt-4 mb-4">
+    @if ($order->status == 'confirmed')
+        @php
+            $review = \App\Models\Review::where('user_id', auth()->id())
+                ->where('car_id', $item->car_id)
+                ->first();
+        @endphp
+
+        @if ($review)
+            <button class="btn btn-outline-secondary px-4 py-2 fw-bold rounded-pill" disabled>
+                <i class="fas fa-check-circle"></i> Đã đánh giá
+            </button>
+        @else
+            <a href="{{ route('user.reviews.create', ['order_id' => $item->car_id]) }}" 
+                class="btn btn-outline-primary px-4 py-2 fw-bold rounded-pill">
+                <i class="fas fa-star"></i> Đánh giá
             </a>
+        @endif
+    @endif
+
+    <a href="{{ route('user.orders.index') }}" 
+        class="btn btn-danger px-4 py-2 fw-bold rounded-pill">
+        <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
+    </a>
+</div>
+
 
         </div>
     </main>

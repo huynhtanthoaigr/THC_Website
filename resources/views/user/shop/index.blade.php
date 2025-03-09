@@ -153,9 +153,9 @@
                                             </div>
                                             <ul class="car-list">
                                                 <li><i class="far fa-steering-wheel"></i>{{ $car->transmission }}</li>
-                                                <li><i class="far fa-road"></i>{{ $car->fuel_efficiency }} / 1-litre</li>
+                                                <li><i class="far fa-road"></i> {{ $car->mileage }} km</li>
                                                 <li><i class="far fa-car"></i>Model: {{ $car->model_year }}</li>
-                                                <li><i class="far fa-gas-pump"></i>{{ $car->fuel_type }}</li>
+                                                 <li><i class="far fa-gas-pump"></i> {{ $car->fuel_type }}</li>
                                             </ul>
                                             <div class="car-footer">
                                                 <span class="car-price">${{ number_format($car->price) }}</span>

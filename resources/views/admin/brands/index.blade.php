@@ -20,6 +20,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
+                        <th><i class="fas fa-image"></i> Logo</th>
                         <th><i class="fas fa-building"></i> Tên thương hiệu</th>
                         <th><i class="fas fa-globe"></i> Quốc gia</th>
                         <th><i class="fas fa-cogs"></i> Hành động</th>
@@ -29,6 +30,13 @@
                     @foreach($brands as $brand)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>
+                                @if(!empty($brand->logo))
+                                    <img src="{{ asset('storage/' . $brand->logo) }}" alt="Logo" style="max-height: 50px;">
+                                @else
+                                    <span class="text-muted">N/A</span>
+                                @endif
+                            </td>
                             <td>{{ $brand->name }}</td>
                             <td>{{ $brand->country }}</td>
                             <td>
@@ -56,7 +64,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ route('admin.brands.update', $brand->id) }}" method="POST">
+                                        <form action="{{ route('admin.brands.update', $brand->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
                                             <div class="mb-3">
@@ -66,6 +74,13 @@
                                             <div class="mb-3">
                                                 <label class="form-label"><i class="fas fa-globe"></i> Quốc gia</label>
                                                 <input type="text" class="form-control" name="country" value="{{ $brand->country }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"><i class="fas fa-image"></i> Logo</label>
+                                                <input type="file" class="form-control" name="logo">
+                                                @if(!empty($brand->logo))
+                                                    <img src="{{ asset('storage/' . $brand->logo) }}" alt="Logo" style="max-height: 50px; margin-top: 10px;">
+                                                @endif
                                             </div>
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="fas fa-save"></i> Cập nhật
@@ -91,7 +106,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.brands.store') }}" method="POST">
+                <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label"><i class="fas fa-building"></i> Tên thương hiệu</label>
@@ -100,6 +115,10 @@
                     <div class="mb-3">
                         <label class="form-label"><i class="fas fa-globe"></i> Quốc gia</label>
                         <input type="text" class="form-control" name="country">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-image"></i> Logo</label>
+                        <input type="file" class="form-control" name="logo">
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Thêm mới
