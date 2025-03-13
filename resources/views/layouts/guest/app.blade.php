@@ -292,6 +292,57 @@
                 transform: translateY(0);
             }
         }
+
+        /* Responsive styles for chatbot */
+        @media (max-width: 576px) {
+            #chatbot-box {
+                width: 90%;
+                height: 60vh;
+                right: 5%;
+                bottom: 80px;
+            }
+
+            #chatbot-icon {
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .chatbot-header {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            .chatbot-footer input {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .chatbot-footer button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .chatbot-messages p {
+                padding: 10px;
+                max-width: 85%;
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 577px) and (max-width: 768px) {
+            #chatbot-box {
+                width: 70%;
+                right: 15%;
+                height: 70vh;
+            }
+
+            #chatbot-icon {
+                width: 60px;
+                height: 60px;
+            }
+        }
     </style>
 
 
