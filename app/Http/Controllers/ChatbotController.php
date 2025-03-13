@@ -33,7 +33,7 @@ class ChatbotController extends Controller
 
         $carListFormatted = collect($carList)->map(
             fn($car) =>
-            "🔹 **{$car['name']}** - Hãng: {$car['brand']} - Giá: {$car['price']}  \n👉 <a href=\"{$car['link']}\">Xem chi tiết</a>"
+            "🔹 **{$car['name']}** - Hãng: {$car['brand']} - Giá: {$car['price']}  \n👉 <a href=\"{$car['link']}\" target=\"_blank\">Xem chi tiết</a>"
         )->implode("\n\n");
 
         $systemMessage = "Bạn là trợ lý tư vấn xe hơi. Dưới đây là danh sách xe hiện có:\n\n" . $carListFormatted .
