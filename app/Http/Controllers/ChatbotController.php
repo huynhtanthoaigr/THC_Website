@@ -21,7 +21,7 @@ class ChatbotController extends Controller
         // Lấy danh sách xe từ DB
         $cars = Car::with('brand')->get();
 
-        // Chuyển thành danh sách Markdown có thể click được
+        // Chuyển thành danh sách với thẻ a
         $carList = $cars->map(function ($car) {
             return [
                 'name' => $car->name,
@@ -33,11 +33,11 @@ class ChatbotController extends Controller
 
         $carListFormatted = collect($carList)->map(
             fn($car) =>
-            "🔹 **{$car['name']}** - Hãng: {$car['brand']} - Giá: {$car['price']}  \n👉 [Xem chi tiết]({$car['link']})"
+            "🔹 **{$car['name']}** - Hãng: {$car['brand']} - Giá: {$car['price']}  \n👉 <a href=\"{$car['link']}\">Xem chi tiết</a>"
         )->implode("\n\n");
 
         $systemMessage = "Bạn là trợ lý tư vấn xe hơi. Dưới đây là danh sách xe hiện có:\n\n" . $carListFormatted .
-            "\n\nHãy sử dụng danh sách này để tư vấn khách hàng. Luôn cung cấp link theo dạng Markdown để có thể click vào.";
+            "\n\nHãy sử dụng danh sách này để tư vấn khách hàng. Luôn cung cấp link theo dạng thẻ a để có thể click vào.";
 
         // Gửi request đến OpenAI
         $response = Http::withHeaders([
