@@ -25,7 +25,7 @@
                     <div class="corner-bottom-right"></div>
                     <div class="d-flex justify-content-center mb-1">
                         <img decoding="async" id="img_qr_code" class="img-fluid rounded"
-                            src="https://qr.sepay.vn/img?acc=79678988889999&amp;bank=MBBank&amp;amount={{ $order->total_price }}&amp;des=&amp;template=compact"
+                            src="https://qr.sepay.vn/img?acc=79678988889999&amp;bank=MBBank&amp;amount={{ $order->total_price }}&amp;des={{ $order->id }}&amp;template=compact"
                             alt="QR Code">
                     </div>
                 </div>
