@@ -44,41 +44,54 @@ class ChatbotController extends Controller
                 return Car::with('brand')->get();
             });
 
-            // Filter cars based on user message
             $message = strtolower($message);
-            $filteredCars = $cars->filter(function ($car) use ($message) {
-                return str_contains(strtolower($car->brand->name), $message) ||
-                    str_contains(strtolower($car->name), $message);
-            });
 
-            if ($filteredCars->isEmpty()) {
-                $carList = $cars;
-            } else {
-                $carList = $filteredCars;
+            // Check if message contains car-related keywords
+            $carKeywords = ['xe', 'ô tô', 'mua', 'giá', 'brand', 'model'];
+            $isCarRelated = false;
+            foreach ($carKeywords as $keyword) {
+                if (str_contains($message, $keyword)) {
+                    $isCarRelated = true;
+                    break;
+                }
             }
 
-            // Format car list
-            $carList = $carList->map(function ($car) {
-                return [
-                    'name' => $car->name,
-                    'brand' => $car->brand->name ?? 'Không rõ',
-                    'price' => number_format($car->price, 0, ',', '.') . " VNĐ",
-                    'link' => env('APP_URL') . "/car/{$car->id}"
-                ];
-            });
+            $carListFormatted = '';
+            if ($isCarRelated) {
+                // Filter cars based on user message
+                $filteredCars = $cars->filter(function ($car) use ($message) {
+                    return str_contains(strtolower($car->brand->name), $message) ||
+                        str_contains(strtolower($car->name), $message);
+                });
 
-            $carListFormatted = collect($carList)->map(
-                fn($car) =>
-                "<div class='car-item'>
-                    <span>🔹 <strong>{$car['name']}</strong> - Hãng: {$car['brand']} - Giá: {$car['price']}</span>
-                    <br>
-                    <a href='{$car['link']}' class='car-link' onclick='window.open(this.href, \"_blank\"); return false;'>👉 Xem chi tiết</a>
-                </div>"
-            )->implode("\n");
+                $carList = $filteredCars->isEmpty() ? $cars : $filteredCars;
+
+                // Format car list
+                $carList = $carList->map(function ($car) {
+                    return [
+                        'name' => $car->name,
+                        'brand' => $car->brand->name ?? 'Không rõ',
+                        'price' => number_format($car->price, 0, ',', '.') . " VNĐ",
+                        'link' => rtrim(env('APP_URL'), '/') . "/car/{$car->id}"
+                    ];
+                });
+
+                $carListFormatted = collect($carList)->map(
+                    fn($car) =>
+                    "<div class='car-item'>
+                        <span>🔹 <strong>{$car['name']}</strong> - Hãng: {$car['brand']} - Giá: {$car['price']}</span>
+                        <br>
+                        <a href='{$car['link']}' class='car-link' onclick='event.preventDefault(); window.open(this.href.replace(/[)]+$/, \"\"), \"_blank\");'>👉 Xem chi tiết</a>
+                    </div>"
+                )->implode("\n");
+            }
 
             // Custom response based on user input
-            $systemMessage = "You are a helpful seller car assistant.";
-            $userMessage = $message . "\n\nDanh sách xe phù hợp:\n" . $carListFormatted;
+            $systemMessage = "You are a helpful car sales assistant. Only show car information when users ask about cars, prices, or specific models. For other questions, provide appropriate responses without listing cars.";
+            $userMessage = $message;
+            if ($isCarRelated && $carListFormatted) {
+                $userMessage .= "\n\nDanh sách xe phù hợp:\n" . $carListFormatted;
+            }
 
             // Call OpenAI API
             $openAIResponse = $this->sendOpenAIRequest($apiKey, $systemMessage, $userMessage);
@@ -95,6 +108,7 @@ class ChatbotController extends Controller
                 '/https?:\/\/(?![^<]*>|[^<>]*<\/)[^\s<]+/i',
                 function ($matches) {
                     $url = html_entity_decode($matches[0]);
+                    $url = preg_replace('/[)]+$/', '', $url);
                     return "<a href=\"{$url}\" onclick=\"window.open(this.href, '_blank'); return false;\">{$url}</a>";
                 },
                 $botReply
