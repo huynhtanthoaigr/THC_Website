@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Tạo quyền
-        $permissions = ['manage users', 'manage posts']; // Tạo thêm quyền nếu cần
+        $permissions = ['manage users', 'manage posts'];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
@@ -73,5 +73,10 @@ class DatabaseSeeder extends Seeder
             $user = User::updateOrCreate(['email' => $userData['email']], $userData);
             $user->assignRole('user'); // Gán quyền User
         }
+
+        $this->call([
+            AboutSeeder::class,
+            CompanyProfileSeeder::class,
+        ]);
     }
 }

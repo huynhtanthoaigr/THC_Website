@@ -18,6 +18,7 @@ use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,9 +30,6 @@ use App\Http\Controllers\Admin\MessageController;
 |
 */
 
-Route::get('/', function () {
-    return view('user/home');
-})->name('home');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
@@ -41,13 +39,14 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', function () {
-        return view('user.home');
-    })->name('home')->middleware('role:user');
 
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard')->middleware('role:admin');
+
+    Route::get('/payment/{id}', [PaymentController::class, 'index'])->name('user.payment');
+    Route::get('/checkout-success/{id}', [CheckoutController::class, 'checkoutSuccess'])->name('user.checkout.success');
+    Route::get('/check-status/{id}', [PaymentController::class, 'checkStatus'])->name('user.check.status');
 });
 Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
@@ -70,6 +69,7 @@ Route::get('/shop', [ShopController::class, 'index'])->name('user.shop.index');
 Route::get('/car/{id}', [ShopController::class, 'show'])->name('user.shop.show');
 
 use App\Http\Controllers\User\CartController;
+
 Route::post('/cart/add/{id}', [\App\Http\Controllers\User\CartController::class, 'add'])->name('cart.add');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -110,10 +110,10 @@ Route::prefix('admin')->middleware(['role:admin'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(function() {
+Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(function () {
     // Route để hiển thị danh sách đơn hàng
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-    
+
     // Route để hiển thị chi tiết đơn hàng
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
@@ -125,6 +125,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/favorites/{car}', [FavoriteController::class, 'store'])->name('user.favorites.store');
     Route::delete('/favorites/{car}', [FavoriteController::class, 'destroy'])->name('user.favorites.destroy');
 });
+
 use App\Http\Controllers\Admin\BlogCategoryController;
 
 Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(function () {
@@ -135,9 +136,7 @@ Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(functi
     Route::resource('blogs', BlogController::class);
 });
 
-
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
+Route::get('', [HomeController::class, 'index'])->name('home');
 Route::get('/blog/{slug}', [App\Http\Controllers\User\BlogController::class, 'show'])
     ->name('user.blog.detail');
 Route::get('/category/{slug}', [App\Http\Controllers\User\BlogController::class, 'category'])->name('user.blog.category');
@@ -166,6 +165,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/messages/{id}', [MessageController::class, 'show'])->name('admin.messages.show');
     Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('admin.messages.destroy');
 });
+
 use App\Http\Controllers\ChatbotController;
 
 Route::post('/chatbot/send-message', [ChatbotController::class, 'sendMessage']);

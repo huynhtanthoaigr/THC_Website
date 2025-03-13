@@ -71,7 +71,7 @@
                         </tr>
                         <tr>
                             <th>Địa Chỉ Xem Xe:</th>
-                            <td>{{ $companyAddress ?? 'N/A' }}</td>
+                            <td>{{ $company->address }}</td>
                         </tr>
                         @if(!empty($order->notes))
                         <tr>
@@ -84,8 +84,6 @@
 
                 <!-- QR Code Hoặc Nút Tải Xuống -->
                 <div class="text-center mt-4">
-                    <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{ url()->current() }}&choe=UTF-8" alt="QR Code">
-                    <p class="text-muted mt-2">Quét mã QR để kiểm tra đơn hàng.</p>
                     <a href="#" class="btn btn-primary mt-2"><i class="fas fa-download"></i> Tải Xuống Hóa Đơn</a>
                 </div>
             </div>

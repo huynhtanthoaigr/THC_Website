@@ -58,7 +58,7 @@
                 </div>
                 <div class="collapse navbar-collapse" id="main_nav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('user.shop.index') }}">Shop Car</a>
                         </li>
@@ -89,7 +89,7 @@
                                 <span>{{ collect(session('cart', []))->sum('quantity') }}</span>
                             </a>
                         </div>
-                        
+
                         @auth
                             <div class="profile-btn">
                                 <a href="{{ route('profile.index') }}" class="nav-right-link">
