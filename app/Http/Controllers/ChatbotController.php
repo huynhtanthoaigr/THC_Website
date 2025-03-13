@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\Car;
+use App\Models\CompanyProfile;
 
 class ChatbotController extends Controller
 {
@@ -26,11 +27,6 @@ class ChatbotController extends Controller
                 return response()->json(['reply' => 'Xin hãy nhập nội dung!'], 400);
             }
 
-            $apiKey = env('OPENAI_API_KEY');
-            if (!$apiKey) {
-                throw new \Exception('OpenAI API key not configured');
-            }
-
             // Cache key based on message content
             $cacheKey = 'chatbot_response_' . md5($message);
 
@@ -39,85 +35,105 @@ class ChatbotController extends Controller
                 return response()->json(['reply' => $cachedResponse]);
             }
 
-            // Get all cars with eager loading and cache them
+            $message = strtolower($message);
+
+            // Get car and company data
             $cars = Cache::remember('all_cars', $this->cacheTime, function () {
                 return Car::with('brand')->get();
             });
 
-            $message = strtolower($message);
+            $company = Cache::remember('company_info', $this->cacheTime, function () {
+                return CompanyProfile::first();
+            });
 
-            // Check if message contains car-related keywords
-            $carKeywords = ['xe', 'ô tô', 'mua', 'giá', 'brand', 'model'];
-            $isCarRelated = false;
-            foreach ($carKeywords as $keyword) {
-                if (str_contains($message, $keyword)) {
-                    $isCarRelated = true;
-                    break;
+            // Format car data - only include requested fields
+            $carData = $cars->map(function ($car) use ($message) {
+                $data = [];
+
+                // Only include name if asked about car names/models
+                if (str_contains($message, 'tên') || str_contains($message, 'mẫu xe')) {
+                    $data['name'] = $car->name;
+                }
+
+                // Only include brand if asked about manufacturers/brands
+                if (str_contains($message, 'hãng') || str_contains($message, 'thương hiệu')) {
+                    $data['brand'] = $car->brand->name ?? 'Không rõ';
+                }
+
+                // Only include price if asked about costs/prices
+                if (str_contains($message, 'giá') || str_contains($message, 'chi phí')) {
+                    $data['price'] = number_format($car->price, 0, ',', '.') . " VNĐ";
+                }
+
+                // Include link if specifically asked or if showing detailed info
+                if (str_contains($message, 'link') || str_contains($message, 'chi tiết')) {
+                    $data['link'] = rtrim(env('APP_URL'), '/') . "/car/{$car->id}";
+                }
+
+                return !empty($data) ? $data : null;
+            })->filter();
+
+            // Format company data - only include requested fields
+            $companyData = null;
+            if ($company) {
+                $companyData = [];
+
+                if (str_contains($message, 'tên công ty')) {
+                    $companyData['name'] = $company->name;
+                }
+                if (str_contains($message, 'địa chỉ')) {
+                    $companyData['address'] = $company->address;
+                }
+                if (str_contains($message, 'điện thoại') || str_contains($message, 'liên hệ')) {
+                    $companyData['phone'] = $company->phone;
+                }
+                if (str_contains($message, 'email')) {
+                    $companyData['email'] = $company->email;
+                }
+                if (str_contains($message, 'website')) {
+                    $companyData['website'] = $company->website;
+                }
+                if (str_contains($message, 'giới thiệu') || str_contains($message, 'thông tin')) {
+                    $companyData['description'] = $company->description;
+                }
+
+                if (empty($companyData)) {
+                    $companyData = null;
                 }
             }
 
-            $carListFormatted = '';
-            if ($isCarRelated) {
-                // Filter cars based on user message
-                $filteredCars = $cars->filter(function ($car) use ($message) {
-                    return str_contains(strtolower($car->brand->name), $message) ||
-                        str_contains(strtolower($car->name), $message);
-                });
+            // Call OpenAI API with context
+            $openaiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+                'Content-Type' => 'application/json',
+            ])->post('https://api.openai.com/v1/chat/completions', [
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => "Bạn là một trợ lý AI hữu ích, chuyên trả lời các câu hỏi về ô tô và thông tin công ty. Hãy trả lời ngắn gọn, thân thiện và chuyên nghiệp. Dưới đây là dữ liệu về xe và công ty:\n" .
+                            "CARS: " . json_encode($carData, JSON_UNESCAPED_UNICODE) . "\n" .
+                            "COMPANY: " . json_encode($companyData, JSON_UNESCAPED_UNICODE)
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $message
+                    ]
+                ],
+                'max_tokens' => 500,
+                'temperature' => 0.7,
+            ]);
 
-                $carList = $filteredCars->isEmpty() ? $cars : $filteredCars;
-
-                // Format car list
-                $carList = $carList->map(function ($car) {
-                    return [
-                        'name' => $car->name,
-                        'brand' => $car->brand->name ?? 'Không rõ',
-                        'price' => number_format($car->price, 0, ',', '.') . " VNĐ",
-                        'link' => rtrim(env('APP_URL'), '/') . "/car/{$car->id}"
-                    ];
-                });
-
-                $carListFormatted = collect($carList)->map(
-                    fn($car) =>
-                    "<div class='car-item'>
-                        <span>🔹 <strong>{$car['name']}</strong> - Hãng: {$car['brand']} - Giá: {$car['price']}</span>
-                        <br>
-                        <a href='{$car['link']}' class='car-link' onclick='event.preventDefault(); window.open(this.href.replace(/[)]+$/, \"\"), \"_blank\");'>👉 Xem chi tiết</a>
-                    </div>"
-                )->implode("\n");
+            if ($openaiResponse->successful()) {
+                $response = $openaiResponse->json()['choices'][0]['message']['content'];
+            } else {
+                $response = 'Xin lỗi, có lỗi xảy ra khi xử lý yêu cầu của bạn. Vui lòng thử lại sau.';
             }
 
-            // Custom response based on user input
-            $systemMessage = "You are a helpful car sales assistant. Only show car information when users ask about cars, prices, or specific models. For other questions, provide appropriate responses without listing cars.";
-            $userMessage = $message;
-            if ($isCarRelated && $carListFormatted) {
-                $userMessage .= "\n\nDanh sách xe phù hợp:\n" . $carListFormatted;
-            }
+            // Cache the response
+            Cache::put($cacheKey, $response, $this->cacheTime);
 
-            // Call OpenAI API
-            $openAIResponse = $this->sendOpenAIRequest($apiKey, $systemMessage, $userMessage);
-
-            // Check for errors in the OpenAI response
-            if ($openAIResponse->failed()) {
-                throw new \Exception('Failed to get response from OpenAI');
-            }
-
-            $botReply = $openAIResponse->json()['choices'][0]['message']['content'] ?? 'Xin lỗi, tôi không thể trả lời lúc này.';
-
-            // Convert URLs to clickable links, but ignore already encoded URLs and existing links
-            $botReply = preg_replace_callback(
-                '/https?:\/\/(?![^<]*>|[^<>]*<\/)[^\s<]+/i',
-                function ($matches) {
-                    $url = html_entity_decode($matches[0]);
-                    $url = preg_replace('/[)]+$/', '', $url);
-                    return "<a href=\"{$url}\" onclick=\"window.open(this.href, '_blank'); return false;\">{$url}</a>";
-                },
-                $botReply
-            );
-
-            // Cache the bot reply
-            Cache::put($cacheKey, $botReply, $this->cacheTime);
-
-            return response()->json(['reply' => $botReply]);
+            return response()->json(['reply' => $response]);
         } catch (\Exception $e) {
             Log::error('Chatbot Error: ' . $e->getMessage());
             return response()->json([
@@ -125,22 +141,6 @@ class ChatbotController extends Controller
                 'error' => config('app.debug') ? $e->getMessage() : null
             ], 500);
         }
-    }
-
-    private function sendOpenAIRequest($apiKey, $systemMessage, $userMessage)
-    {
-        return Http::timeout(15)->withHeaders([
-            'Authorization' => 'Bearer ' . $apiKey,
-            'Content-Type' => 'application/json',
-        ])->post('https://api.openai.com/v1/chat/completions', [
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                ['role' => 'system', 'content' => $systemMessage],
-                ['role' => 'user', 'content' => $userMessage]
-            ],
-            'temperature' => 0.7,
-            'max_tokens' => 1000,
-        ]);
     }
 
     private function checkRateLimit(Request $request)
