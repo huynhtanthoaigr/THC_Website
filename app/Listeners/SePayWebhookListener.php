@@ -2,10 +2,6 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use SePay\SePay\Events\SePayWebhookEvent;
-use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 
@@ -26,11 +22,16 @@ class SePayWebhookListener
     {
         try {
             if ($event['transferType'] === 'in') {
-                $order = Order::where('id', session('order_id'))->first();
-                $order->status = 'processing';
-                $order->save();
+                $orderId = substr($event['code'], 3);
+                $order = Order::where('id', $orderId)->first();
+                if ($order) {
+                    $order->status = 'processing';
+                    $order->save();
+                } else {
+                    Log::error("Order not found", ['order_id' => $orderId]);
+                }
             } else {
-
+                // Handle other transfer types if necessary
             }
         } catch (\Exception $e) {
             Log::error("Error handling SePay Webhook", ['message' => $e->getMessage()]);
