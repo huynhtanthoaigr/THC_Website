@@ -7,81 +7,28 @@
 
         <!-- hero slider -->
         <div class="hero-section">
-            <div class="hero-slider owl-carousel owl-theme">
-                <div class="hero-single" style="background: url(assets/img/slider/slider-1.jpg)">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-md-12 col-lg-7">
-                                <div class="hero-content">
-                                    <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">Welcome To
-                                        Motex!</h6>
-                                    <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">
-                                        We Offer Best Way To Find <span>Dream</span> Car
-                                    </h1>
-                                    <p data-animation="fadeInLeft" data-delay=".75s">
-                                        There are many variations of passages orem psum available but the majority have
-                                        suffered alteration in some form the great explorer of the truth by injected humour.
-                                    </p>
-                                    <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
-                                        <a href="#" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
-                                        <a href="#" class="theme-btn theme-btn2">Learn More<i
-                                                class="fas fa-arrow-right-long"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-single" style="background: url(assets/img/slider/slider-2.jpg)">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-md-12 col-lg-7">
-                                <div class="hero-content">
-                                    <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">Welcome To
-                                        Motex!</h6>
-                                    <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">
-                                        We Offer Best Way To Find <span>Dream</span> Car
-                                    </h1>
-                                    <p data-animation="fadeInLeft" data-delay=".75s">
-                                        There are many variations of passages orem psum available but the majority have
-                                        suffered alteration in some form the great explorer of the truth by injected humour.
-                                    </p>
-                                    <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
-                                        <a href="#" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
-                                        <a href="#" class="theme-btn theme-btn2">Learn More<i
-                                                class="fas fa-arrow-right-long"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-single" style="background: url(assets/img/slider/slider-3.jpg)">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-md-12 col-lg-7">
-                                <div class="hero-content">
-                                    <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">Welcome To
-                                        Motex!</h6>
-                                    <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">
-                                        We Offer Best Way To Find <span>Dream</span> Car
-                                    </h1>
-                                    <p data-animation="fadeInLeft" data-delay=".75s">
-                                        There are many variations of passages orem psum available but the majority have
-                                        suffered alteration in some form the great explorer of the truth by injected humour.
-                                    </p>
-                                    <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
-                                        <a href="#" class="theme-btn">About More<i class="fas fa-arrow-right-long"></i></a>
-                                        <a href="#" class="theme-btn theme-btn2">Learn More<i
-                                                class="fas fa-arrow-right-long"></i></a>
-                                    </div>
-                                </div>
+    <div class="hero-slider owl-carousel owl-theme">
+        @foreach(\App\Models\Slider::all() as $slider)
+        <div class="hero-single" style="background: url({{ asset('storage/' . $slider->image) }})">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-lg-7">
+                        <div class="hero-content">
+                            <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">{{ $slider->hero_sub_title }}</h6>
+                            <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">{!! $slider->hero_title !!}</h1>
+                            <p data-animation="fadeInLeft" data-delay=".75s">{{ $slider->hero_description }}</p>
+                            <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
+                                <a href="{{ $slider->btn1_link }}" class="theme-btn">{{ $slider->btn1_text }}<i class="fas fa-arrow-right-long"></i></a>
+                                <a href="{{ $slider->btn2_link }}" class="theme-btn theme-btn2">{{ $slider->btn2_text }}<i class="fas fa-arrow-right-long"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @endforeach
+    </div>
+</div>
         <!-- hero slider end -->
 
 
@@ -202,7 +149,7 @@
                     </div>
                 </div>
 
-                @foreach ($categories->slice(0, 8)->chunk(4) as $chunk)  {{-- Lấy 8 danh mục, chia thành từng hàng 4 ảnh --}}
+                @foreach ($categories->slice(0, 8)->chunk(4) as $chunk) {{-- Lấy 8 danh mục, chia thành từng hàng 4 ảnh --}}
                     <div class="row">
                         @foreach ($chunk as $category)
                             <div class="col-6 col-md-3">

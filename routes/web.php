@@ -196,3 +196,9 @@ Route::get('/bypass', function () {
         'bypass' => 'Thiếu tham số bypass.',
     ]);
 });
+use App\Http\Controllers\Admin\SliderController;
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::resource('sliders', SliderController::class)->names('admin.sliders');
+});
+

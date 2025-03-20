@@ -156,7 +156,9 @@
                 <a href="{{ route('admin.about.index') }}">
                   <span class="sub-item">Abouts</span>
                 </a>
-
+                <a href="{{ route('admin.sliders.index') }}">
+                  <span class="sub-item">Slider</span>
+                </a>
               </li>
             </ul>
           </div>

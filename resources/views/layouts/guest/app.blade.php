@@ -61,9 +61,10 @@
 
 
     <!-- Chatbot UI -->
-    <div id="chatbot-icon">
+    <!--  <div id="chatbot-icon">
         <img src="{{ asset('assets/img/chatbot-icon.webp') }}" alt="Chatbot" onclick="toggleChatbot()">
     </div>
+    -->
 
     <!-- Chatbot Box -->
     <div id="chatbot-box">
