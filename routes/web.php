@@ -18,6 +18,7 @@ use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\User\ReviewController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -108,6 +109,7 @@ Route::prefix('admin')->middleware(['role:admin'])->group(function () {
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });
+Route::post('/user/reviews/store', [ReviewController::class, 'store'])->name('user.reviews.store');
 
 
 Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(function() {
@@ -152,8 +154,6 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::get('/about', [App\Http\Controllers\User\AboutController::class, 'index'])->name('user.about');
-Route::get('/reviews/create/{order_id}', [App\Http\Controllers\User\ReviewController::class, 'create'])->name('user.reviews.create');
-Route::post('/reviews/store', [App\Http\Controllers\User\ReviewController::class, 'store'])->name('user.reviews.store');
 
 use App\Http\Controllers\User\ContactController;
 
@@ -163,9 +163,16 @@ Route::post('/contact', [ContactController::class, 'submit'])->name('contact.sub
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/messages', [MessageController::class, 'index'])->name('admin.messages');
-    Route::get('/messages/{id}', [MessageController::class, 'show'])->name('admin.messages.show');
+    Route::get('/messagesid}', [MessageController::class, 'show'])->name('admin.messages.show');
     Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('admin.messages.destroy');
 });
 use App\Http\Controllers\ChatbotController;
 
 Route::post('/chatbot/send-message', [ChatbotController::class, 'sendMessage']);
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/reviews/create/{car_id}', [ReviewController::class, 'create'])->name('user.reviews.create');
+    Route::post('/reviews/store', [ReviewController::class, 'store'])->name('user.reviews.store');
+});

@@ -18,6 +18,6 @@ class Review extends Model
 
     public function car()
     {
-        return $this->belongsTo(Car::class, 'car_id'); // car_id là khóa ngoại trong bảng reviews
+        return $this->belongsTo(Car::class, 'car_id');
     }
 }

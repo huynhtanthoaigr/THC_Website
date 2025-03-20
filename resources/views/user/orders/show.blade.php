@@ -71,7 +71,8 @@
             </div>
 
             <div class="d-flex  gap-3 mt-4 mb-4">
-    @if ($order->status == 'confirmed')
+            @if ($order->status == 'confirmed')
+    @foreach ($order->orderItems as $item)
         @php
             $review = \App\Models\Review::where('user_id', auth()->id())
                 ->where('car_id', $item->car_id)
@@ -83,12 +84,14 @@
                 <i class="fas fa-check-circle"></i> Đã đánh giá
             </button>
         @else
-            <a href="{{ route('user.reviews.create', ['order_id' => $item->car_id]) }}" 
+            <a href="{{ route('user.reviews.create', ['car_id' => $item->car_id]) }}" 
                 class="btn btn-outline-primary px-4 py-2 fw-bold rounded-pill">
                 <i class="fas fa-star"></i> Đánh giá
             </a>
         @endif
-    @endif
+    @endforeach
+@endif
+
 
     <a href="{{ route('user.orders.index') }}" 
         class="btn btn-danger px-4 py-2 fw-bold rounded-pill">

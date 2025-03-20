@@ -6,14 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Models\Car;
-use App\Models\Order; // Thêm dòng này để import mô hình Order
+use App\Models\Order;
 
 class ReviewController extends Controller
 {
     public function create($car_id)
     {
         $car = Car::findOrFail($car_id);
-        $order = Order::where('user_id', auth()->id())->where('status', 'pending')->first(); // Hoặc điều kiện khác tuỳ theo ứng dụng của bạn
+        $order = Order::where('user_id', auth()->id())->where('status', 'confirmed')->first();
+
+        if (!$order) {
+            return redirect()->route('user.orders.index')->with('error', 'Bạn chưa mua xe này!');
+        }
 
         return view('user.review.create', compact('car', 'order'));
     }

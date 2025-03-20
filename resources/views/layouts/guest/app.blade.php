@@ -251,7 +251,7 @@
 
             // Gửi tin nhắn đến OpenAI API (nếu cần)
             getBotResponse(message);
-
+         
             // Xóa ô nhập
             inputField.value = "";
         }
@@ -264,31 +264,32 @@
 
 
         function getBotResponse(message) {
-            var messagesContainer = document.getElementById("chatbot-messages");
+    var messagesContainer = document.getElementById("chatbot-messages");
 
-            var botMessage = document.createElement("p");
-            botMessage.textContent = "Đang xử lý...";
-            botMessage.className = "bot-message";
-            messagesContainer.appendChild(botMessage);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    var botMessage = document.createElement("p");
+    botMessage.textContent = "🤖 Đang gõ...";
+    botMessage.className = "bot-message";
+    messagesContainer.appendChild(botMessage);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            fetch("/chatbot/send-message", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-                },
-                body: JSON.stringify({ message: message })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    botMessage.textContent = data.reply;
-                })
-                .catch(error => {
-                    botMessage.textContent = "Xin lỗi, tôi không thể trả lời ngay bây giờ.";
-                    console.error("Lỗi:", error);
-                });
-        }
+    fetch("/chatbot/send-message", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+        },
+        body: JSON.stringify({ message: message })
+    })
+        .then(response => response.json())
+        .then(data => {
+            botMessage.innerHTML = data.reply.replace(/\n/g, "<br>"); // Hiển thị danh sách xe theo dòng mới
+        })
+        .catch(error => {
+            botMessage.textContent = "Xin lỗi, tôi không thể trả lời ngay bây giờ.";
+            console.error("Lỗi:", error);
+        });
+}
+
 
     </script>
 
