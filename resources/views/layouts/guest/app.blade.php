@@ -552,7 +552,7 @@
         }
     </script>
 
-
+<script defer src="https://chatbot.techzone.edu.vn/vendor/chatbot/js/external-chatbot.js" data-chatbot-uuid="08a58836-a38c-49cd-b2e8-9019629c7988" data-iframe-width="420" data-iframe-height="745" data-language="en" ></script>
     <!-- js -->
     <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets/js/modernizr.min.js') }}"></script>
