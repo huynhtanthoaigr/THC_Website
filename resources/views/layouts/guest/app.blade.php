@@ -69,7 +69,10 @@
     <div id="chatbot-box">
         <div class="chatbot-header">
             <span>Hỗ trợ trực tuyến</span>
-            <button onclick="toggleChatbot()">✖</button>
+            <div>
+                <button onclick="chatbot.clearHistory()" title="Xóa lịch sử"><i class="fas fa-trash"></i></button>
+                <button onclick="toggleChatbot()">✖</button>
+            </div>
         </div>
         <div class="chatbot-body">
             <div class="chatbot-messages" id="chatbot-messages">
@@ -138,6 +141,11 @@
             color: white;
             font-size: 18px;
             cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .chatbot-header button:hover {
+            opacity: 0.8;
         }
 
         /* Phần tin nhắn */
@@ -163,8 +171,8 @@
         }
 
         .user-message {
-            background: #007bff;
-            color: white;
+            background: #f1f1f1;
+            color: black;
             align-self: flex-end;
         }
 
@@ -172,6 +180,42 @@
             background: #f1f1f1;
             color: black;
             align-self: flex-start;
+        }
+
+        .bot-message a {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .bot-message a:hover {
+            color: #0056b3;
+        }
+
+        .bot-message a.car-link {
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: #e3f2fd;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .bot-message a.car-link:hover {
+            color: #0056b3;
+            background: #bbdefb;
+            text-decoration: none;
+        }
+
+
+        .car-item strong {
+            color: #2196f3;
+        }
+
+        .bot-response {
+            line-height: 1.5;
         }
 
         /* Footer */
@@ -200,97 +244,311 @@
             cursor: pointer;
             font-size: 16px;
         }
+
+        .typing-indicator {
+            padding: 10px;
+            background: #f1f1f1;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        .bot-message.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Smooth transitions */
+        #chatbot-box {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .chatbot-messages div {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive styles for chatbot */
+        @media (max-width: 576px) {
+            #chatbot-box {
+                width: 90%;
+                height: 60vh;
+                right: 5%;
+                bottom: 80px;
+            }
+
+            #chatbot-icon {
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .chatbot-header {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            .chatbot-footer input {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .chatbot-footer button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .chatbot-messages p {
+                padding: 10px;
+                max-width: 85%;
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 577px) and (max-width: 768px) {
+            #chatbot-box {
+                width: 70%;
+                right: 15%;
+                height: 70vh;
+            }
+
+            #chatbot-icon {
+                width: 60px;
+                height: 60px;
+            }
+        }
     </style>
 
 
     <!-- Chatbot JavaScript -->
     <script>
-        // Kiểm tra nếu đã mở chatbot trước đó hay chưa
-        document.addEventListener("DOMContentLoaded", function () {
-            let chatbotBox = document.getElementById("chatbot-box");
+        class ChatbotUI {
+            constructor() {
+                this.chatbotBox = document.getElementById("chatbot-box");
+                this.inputField = document.getElementById("chatbot-input");
+                this.messagesContainer = document.getElementById("chatbot-messages");
+                this.isTyping = false;
+                this.typingTimeout = null;
+                this.messageQueue = [];
+                this.processingQueue = false;
 
-            if (!localStorage.getItem("chatbotOpened")) {
-                chatbotBox.style.display = "flex"; // Mở chatbot tự động lần đầu
-                localStorage.setItem("chatbotOpened", "true"); // Đánh dấu là đã mở
-            } else {
-                chatbotBox.style.display = "none"; // Nếu đã mở trước đó, giữ nó ẩn
+                // Initialize chatbot state
+                this.initializeChatbot();
+
+                // Setup event listeners
+                this.setupEventListeners();
             }
-        });
 
-        // Toggle chatbot hiển thị khi click vào icon
-        function toggleChatbot() {
-            let chatbotBox = document.getElementById("chatbot-box");
+            initializeChatbot() {
+                if (!localStorage.getItem("chatbotOpened")) {
+                    this.chatbotBox.style.display = "flex";
+                    localStorage.setItem("chatbotOpened", "true");
+                } else {
+                    this.chatbotBox.style.display = "none";
+                }
 
-            if (chatbotBox.style.display === "none" || chatbotBox.style.display === "") {
-                chatbotBox.style.display = "flex"; // Hiện hộp chatbot
-                setTimeout(() => {
-                    document.getElementById("chatbot-input").focus(); // Tự động focus vào ô nhập tin nhắn
-                }, 300);
-            } else {
-                chatbotBox.style.display = "none"; // Ẩn hộp chatbot
+                // Restore chat history if exists
+                const history = localStorage.getItem("chatHistory");
+                if (history) {
+                    this.messagesContainer.innerHTML = history;
+                }
+            }
+
+            setupEventListeners() {
+                // Input field event listener with debouncing
+                this.inputField.addEventListener("keypress", this.debounce((event) => {
+                    if (event.key === "Enter") {
+                        this.sendMessage();
+                    }
+                }, 300));
+
+                // Add scroll event listener for lazy loading
+                this.messagesContainer.addEventListener("scroll", this.debounce(() => {
+                    this.handleScroll();
+                }, 200));
+            }
+
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            toggleChatbot() {
+                if (this.chatbotBox.style.display === "none" || this.chatbotBox.style.display === "") {
+                    this.chatbotBox.style.display = "flex";
+                    this.inputField.focus();
+                    // Scroll to bottom when opening
+                    this.scrollToBottom();
+                } else {
+                    this.chatbotBox.style.display = "none";
+                }
+            }
+
+            async sendMessage() {
+                const message = this.inputField.value.trim();
+                if (message === "" || this.isTyping) return;
+
+                try {
+                    // Add user message
+                    this.addMessage(message, "user-message");
+                    this.inputField.value = "";
+
+                    // Show typing indicator
+                    this.showTypingIndicator();
+
+                    const response = await this.sendToServer(message);
+
+                    // Remove typing indicator and add bot response
+                    this.hideTypingIndicator();
+                    this.addMessage(response.reply, "bot-message");
+
+                    // Save chat history
+                    this.saveChatHistory();
+
+                    // Scroll to bottom
+                    this.scrollToBottom();
+
+                } catch (error) {
+                    console.error("Error:", error);
+                    this.hideTypingIndicator();
+                    this.addMessage("Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau.", "bot-message error");
+                }
+            }
+
+            async sendToServer(message) {
+                const response = await fetch("/chatbot/send-message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            "content")
+                    },
+                    body: JSON.stringify({
+                        message
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+            }
+
+            addMessage(content, className) {
+                const messageElement = document.createElement("div");
+                messageElement.className = className;
+                messageElement.innerHTML = content;
+
+                // Add click handlers for links
+                messageElement.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.open(link.href, '_blank');
+                    });
+                });
+
+                this.messagesContainer.appendChild(messageElement);
+                this.scrollToBottom();
+            }
+
+            showTypingIndicator() {
+                this.isTyping = true;
+                const typingIndicator = document.createElement("div");
+                typingIndicator.className = "typing-indicator bot-message";
+                typingIndicator.innerHTML = "Đang trả lời...";
+                this.messagesContainer.appendChild(typingIndicator);
+                this.scrollToBottom();
+            }
+
+            hideTypingIndicator() {
+                this.isTyping = false;
+                const typingIndicator = this.messagesContainer.querySelector(".typing-indicator");
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            scrollToBottom() {
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+
+            saveChatHistory() {
+                localStorage.setItem("chatHistory", this.messagesContainer.innerHTML);
+            }
+
+            handleScroll() {
+                // Implement lazy loading or infinite scroll if needed
+                if (this.messagesContainer.scrollTop === 0) {
+                    // Load more messages
+                }
+            }
+
+            clearHistory() {
+                // Clear messages container
+                this.messagesContainer.innerHTML = '<p class="bot-message">Xin chào! Tôi có thể giúp gì cho bạn?</p>';
+
+                // Clear local storage
+                localStorage.removeItem("chatHistory");
+
+                // Save the new empty state
+                this.saveChatHistory();
+
+                // Scroll to bottom
+                this.scrollToBottom();
             }
         }
 
+        // Initialize chatbot
+        const chatbot = new ChatbotUI();
 
+        // Global function for the onclick handler
+        function toggleChatbot() {
+            chatbot.toggleChatbot();
+        }
 
         function sendMessage() {
-            var inputField = document.getElementById("chatbot-input");
-            var message = inputField.value.trim();
-            if (message === "") return;
-
-            var messagesContainer = document.getElementById("chatbot-messages");
-
-            // Hiển thị tin nhắn của người dùng
-            var userMessage = document.createElement("p");
-            userMessage.textContent = message;
-            userMessage.className = "user-message";
-            messagesContainer.appendChild(userMessage);
-
-            // Cuộn xuống cuối cùng
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            // Gửi tin nhắn đến OpenAI API (nếu cần)
-            getBotResponse(message);
-         
-            // Xóa ô nhập
-            inputField.value = "";
+            chatbot.sendMessage();
         }
 
         function handleKeyPress(event) {
             if (event.key === "Enter") {
-                sendMessage();
+                chatbot.sendMessage();
             }
         }
-
-
-        function getBotResponse(message) {
-    var messagesContainer = document.getElementById("chatbot-messages");
-
-    var botMessage = document.createElement("p");
-    botMessage.textContent = "🤖 Đang gõ...";
-    botMessage.className = "bot-message";
-    messagesContainer.appendChild(botMessage);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-    fetch("/chatbot/send-message", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-        },
-        body: JSON.stringify({ message: message })
-    })
-        .then(response => response.json())
-        .then(data => {
-            botMessage.innerHTML = data.reply.replace(/\n/g, "<br>"); // Hiển thị danh sách xe theo dòng mới
-        })
-        .catch(error => {
-            botMessage.textContent = "Xin lỗi, tôi không thể trả lời ngay bây giờ.";
-            console.error("Lỗi:", error);
-        });
-}
-
-
     </script>
 
 
