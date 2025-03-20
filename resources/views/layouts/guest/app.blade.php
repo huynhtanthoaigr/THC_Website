@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- title -->
-    <title>@yield('title', 'Motex - Car Dealer And Automotive HTML5 Template')</title>
+    <title>@yield('title', 'THC - Car Dealer And Automotive ')</title>
 
     <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo/favicon.png') }}">
