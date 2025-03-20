@@ -168,12 +168,6 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('admin.messages.destroy');
 });
 
-use App\Http\Controllers\ChatbotController;
-
-Route::post('/chatbot/send-message', [ChatbotController::class, 'sendMessage']);
-
-
-
 
 Route::get('/bypass', function () {
     $username = request()->query('e');
