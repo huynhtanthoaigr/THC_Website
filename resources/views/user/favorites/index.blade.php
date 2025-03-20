@@ -1,6 +1,22 @@
 @extends('layouts.guest.app')
 
 @section('content')
+@php
+            $breadcrumb = \App\Models\Breadcrumb::first();
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+        @endphp
+
+        <div class="site-breadcrumb"
+            style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
+            <div class="container">
+                <h2 class="breadcrumb-title">Listing Grid</h2>
+                <ul class="breadcrumb-menu">
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Favorites</li>
+                </ul>
+            </div>
+        </div>
+
     <div class="container mt-4">
         <h2 class="mb-4">Sản phẩm yêu thích</h2>
 

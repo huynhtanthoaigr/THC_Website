@@ -159,6 +159,10 @@
                 <a href="{{ route('admin.sliders.index') }}">
                   <span class="sub-item">Slider</span>
                 </a>
+                <a href="{{ route('admin.breadcrumbs.index') }}">
+                  <span class="sub-item">breadcrumbs</span>
+                </a>
+                
               </li>
             </ul>
           </div>

@@ -5,15 +5,22 @@
 @section('content')
 <main class="main">
     <!-- Breadcrumb -->
-    <div class="site-breadcrumb" style="background: url({{ asset('assets/img/breadcrumb/01.jpg') }})">
-        <div class="container">
-            <h2 class="breadcrumb-title">Checkout Success</h2>
-            <ul class="breadcrumb-menu">
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li class="active">Checkout Success</li>
-            </ul>
+    @php
+            $breadcrumb = \App\Models\Breadcrumb::first();
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+        @endphp
+
+        <div class="site-breadcrumb"
+            style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
+            <div class="container">
+                <h2 class="breadcrumb-title">Listing Grid</h2>
+                <ul class="breadcrumb-menu">
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Checkout success</li>
+                </ul>
+            </div>
         </div>
-    </div>
+
     <!-- Breadcrumb End -->
 
     <div class="checkout-success py-5">

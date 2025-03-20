@@ -6,15 +6,22 @@
     <main class="main">
 
         <!-- breadcrumb -->
-        <div class="site-breadcrumb" style="background: url(assets/img/breadcrumb/01.jpg)">
+        @php
+            $breadcrumb = \App\Models\Breadcrumb::first();
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+        @endphp
+
+        <div class="site-breadcrumb"
+            style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
             <div class="container">
-                <h2 class="breadcrumb-title">Blog Single</h2>
+                <h2 class="breadcrumb-title">Listing Grid</h2>
                 <ul class="breadcrumb-menu">
-                    <li><a href="index.html">Home</a></li>
-                    <li class="active">Blog Single</li>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Detail Blogs</li>
                 </ul>
             </div>
         </div>
+
         <!-- breadcrumb end -->
 
 

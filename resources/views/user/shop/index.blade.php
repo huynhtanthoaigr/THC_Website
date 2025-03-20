@@ -4,15 +4,22 @@
 
 @section('content')
     <main class="main">
-        <div class="site-breadcrumb" style="background: url(assets/img/breadcrumb/01.jpg)">
+        @php
+            $breadcrumb = \App\Models\Breadcrumb::first();
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+        @endphp
+
+        <div class="site-breadcrumb"
+            style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
             <div class="container">
                 <h2 class="breadcrumb-title">Listing Grid</h2>
                 <ul class="breadcrumb-menu">
-                    <li><a href="index.html">Home</a></li>
-                    <li class="active">Listing Grid</li>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Shop Car</li>
                 </ul>
             </div>
         </div>
+
         <!-- breadcrumb end -->
 
         <!-- car area -->
@@ -155,7 +162,7 @@
                                                 <li><i class="far fa-steering-wheel"></i>{{ $car->transmission }}</li>
                                                 <li><i class="far fa-road"></i> {{ $car->mileage }} km</li>
                                                 <li><i class="far fa-car"></i>Model: {{ $car->model_year }}</li>
-                                                 <li><i class="far fa-gas-pump"></i> {{ $car->fuel_type }}</li>
+                                                <li><i class="far fa-gas-pump"></i> {{ $car->fuel_type }}</li>
                                             </ul>
                                             <div class="car-footer">
                                                 <span class="car-price">${{ number_format($car->price) }}</span>

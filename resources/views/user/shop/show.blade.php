@@ -2,15 +2,22 @@
 
 @section('content')
     <main class="main">
-        <div class="site-breadcrumb" style="background: url(assets/img/breadcrumb/01.jpg)">
+    @php
+            $breadcrumb = \App\Models\Breadcrumb::first();
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+        @endphp
+
+        <div class="site-breadcrumb"
+            style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
             <div class="container">
-                <h2 class="breadcrumb-title">Shop Single</h2>
+                <h2 class="breadcrumb-title">Listing Grid</h2>
                 <ul class="breadcrumb-menu">
-                    <li><a href="{{ route('home') }}">Home</a></li>
-                    <li class="active">Shop Single</li>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Detials Car</li>
                 </ul>
             </div>
         </div>
+
         <div class="shop-item-single bg py-120">
             <div class="container">
                 <div class="row">
