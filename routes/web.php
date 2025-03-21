@@ -202,3 +202,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/breadcrumbs', [BreadcrumbController::class, 'index'])->name('admin.breadcrumbs.index');
     Route::post('/breadcrumbs/update', [BreadcrumbController::class, 'update'])->name('admin.breadcrumbs.update');
 });
+
+
+Route::get('/admin/dashboard', [CompanyProfileController::class, 'adminDashboard'])
+    ->name('admin.dashboard');

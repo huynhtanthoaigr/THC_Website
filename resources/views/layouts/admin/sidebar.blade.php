@@ -2,16 +2,13 @@
   <div class="sidebar-logo">
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
-      <a href="index.html" class="logo">
-        @if(!empty($company->logo))
-      <img src="{{ asset('storage/' . $company->logo) }}" alt="Logo Công Ty"
-        class="img-thumbnail shadow-sm rounded-circle" style="max-width: 200px;">
-    @else
-    <!-- Hiển thị ảnh mặc định hoặc khung trống -->
-  @endif
+      <a href="{{ route('admin.dashboard') }}" class="logo">
+       <img src="{{ asset('storage/' . ($company->logo ?? 'default-logo.png')) }}" 
+     alt="Company Logo" 
+     class="navbar-brand" 
+     height="40">
 
       </a>
-
       <div class="nav-toggle">
         <button class="btn btn-toggle toggle-sidebar">
           <i class="gg-menu-right"></i>
@@ -24,6 +21,7 @@
         <i class="gg-more-vertical-alt"></i>
       </button>
     </div>
+
     <!-- End Logo Header -->
   </div>
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
@@ -162,7 +160,7 @@
                 <a href="{{ route('admin.breadcrumbs.index') }}">
                   <span class="sub-item">breadcrumbs</span>
                 </a>
-                
+
               </li>
             </ul>
           </div>

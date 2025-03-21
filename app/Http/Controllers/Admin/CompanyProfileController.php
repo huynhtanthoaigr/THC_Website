@@ -7,6 +7,7 @@ use App\Models\CompanyProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class CompanyProfileController extends Controller
 {
     public function index()
@@ -52,5 +53,10 @@ class CompanyProfileController extends Controller
     
         return redirect()->route('admin.company.index')->with('success', 'Cập nhật thông tin công ty thành công!');
     }
-    
+    public function adminDashboard()
+{
+    $company = CompanyProfile::first(); // Lấy thông tin công ty đầu tiên
+    return view('admin.dashboard', compact('company'));
+}
+
 }

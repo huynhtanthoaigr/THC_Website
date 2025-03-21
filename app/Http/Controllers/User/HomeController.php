@@ -20,14 +20,14 @@ class HomeController extends Controller
         $brands = Brand::all();
         $blogs = Blog::where('status', 1)->latest()->take(3)->get();
         $about = About::first();
-    
+        $company = \App\Models\CompanyProfile::first(); // Lấy thông tin công ty
         // Lấy danh sách review kèm theo xe và ảnh đầu tiên
         $reviews = Review::with(['user', 'car.firstImage'])
                         ->latest()
                         ->take(5)
                         ->get();
     
-        return view('user.home', compact('categories', 'cars', 'brands', 'blogs', 'about', 'reviews'));
+        return view('user.home', compact('categories', 'cars', 'brands', 'blogs', 'about', 'reviews','company'));
     }
     
     
