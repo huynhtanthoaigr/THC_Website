@@ -123,6 +123,13 @@ Route::middleware(['auth', 'verified'])->prefix('user')->name('user.')->group(fu
 });
 
 
+use App\Http\Controllers\User\ReviewController;
+
+Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+    Route::get('/reviews/create/{car_id}', [ReviewController::class, 'create'])->name('reviews.create'); 
+    Route::post('/reviews/store', [ReviewController::class, 'store'])->name('reviews.store');
+});
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('user.favorites.index');
