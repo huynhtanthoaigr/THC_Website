@@ -59,10 +59,13 @@
     @include('layouts.guest.footer')
     <!-- footer end -->
 <style>
-    #lqd-ext-chatbot-wrap
-    {
-        margin-bottom: 37px !important;
-    }
+ #lqd-ext-chatbot-wrap {
+    margin-bottom: 40px !important; /* Dịch chatbot lên trên một chút */
+    right: 10px !important; /* Dịch chatbot sát về bên phải */
+    position: fixed !important; /* Giữ chatbot cố định khi cuộn trang */
+    z-index: 9999; /* Đảm bảo chatbot luôn hiển thị trên các phần khác */
+}
+
 </style>
 <script defer src="https://chatbot.techzone.edu.vn/vendor/chatbot/js/external-chatbot.js" data-chatbot-uuid="08a58836-a38c-49cd-b2e8-9019629c7988" data-iframe-width="420" data-iframe-height="745" data-language="en" ></script>
     <!-- js -->
