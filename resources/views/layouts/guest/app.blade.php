@@ -60,7 +60,7 @@
     <!-- footer end -->
 <style>
  #lqd-ext-chatbot-wrap {
-    margin-bottom: 40px !important; /* Dịch chatbot lên trên một chút */
+    margin-bottom: 45px !important; /* Dịch chatbot lên trên một chút */
     right: 10px !important; /* Dịch chatbot sát về bên phải */
     position: fixed !important; /* Giữ chatbot cố định khi cuộn trang */
     z-index: 9999; /* Đảm bảo chatbot luôn hiển thị trên các phần khác */
