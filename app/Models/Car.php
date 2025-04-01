@@ -36,6 +36,10 @@ class Car extends Model
     {
         return $this->hasOne(CarImage::class, 'car_id')->latest();
     }
-    
+    public function details()
+{
+    return $this->hasOne(CarDetail::class, 'car_id');
+}
+
 }
 

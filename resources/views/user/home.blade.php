@@ -7,28 +7,35 @@
 
         <!-- hero slider -->
         <div class="hero-section">
-    <div class="hero-slider owl-carousel owl-theme">
-        @foreach(\App\Models\Slider::all() as $slider)
-        <div class="hero-single" style="background: url({{ asset('storage/' . $slider->image) }})">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-12 col-lg-7">
-                        <div class="hero-content">
-                            <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">{{ $slider->hero_sub_title }}</h6>
-                            <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">{!! $slider->hero_title !!}</h1>
-                            <p data-animation="fadeInLeft" data-delay=".75s">{{ $slider->hero_description }}</p>
-                            <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
-                                <a href="{{ $slider->btn1_link }}" class="theme-btn">{{ $slider->btn1_text }}<i class="fas fa-arrow-right-long"></i></a>
-                                <a href="{{ $slider->btn2_link }}" class="theme-btn theme-btn2">{{ $slider->btn2_text }}<i class="fas fa-arrow-right-long"></i></a>
+            <div class="hero-slider owl-carousel owl-theme">
+                @foreach(\App\Models\Slider::all() as $slider)
+                    <div class="hero-single" style="background: url({{ asset('storage/' . $slider->image) }})">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-md-12 col-lg-7">
+                                    <div class="hero-content">
+                                        <h6 class="hero-sub-title" data-animation="fadeInUp" data-delay=".25s">
+                                            {{ $slider->hero_sub_title }}
+                                        </h6>
+                                        <h1 class="hero-title" data-animation="fadeInRight" data-delay=".50s">
+                                            {!! $slider->hero_title !!}
+                                        </h1>
+                                        <p data-animation="fadeInLeft" data-delay=".75s">{{ $slider->hero_description }}</p>
+                                        <div class="hero-btn" data-animation="fadeInUp" data-delay="1s">
+                                            <a href="{{ $slider->btn1_link }}" class="theme-btn">{{ $slider->btn1_text }}<i
+                                                    class="fas fa-arrow-right-long"></i></a>
+                                            <a href="{{ $slider->btn2_link }}"
+                                                class="theme-btn theme-btn2">{{ $slider->btn2_text }}<i
+                                                    class="fas fa-arrow-right-long"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
         </div>
-        @endforeach
-    </div>
-</div>
         <!-- hero slider end -->
 
 
@@ -37,99 +44,95 @@
             <div class="container">
                 <div class="find-car-form">
                     <h4 class="find-car-title">Let's Find Your Perfect Car</h4>
-                    <form action="#">
+                    <form action="{{ route('home') }}" method="GET">
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label>Car Condition</label>
-                                    <select class="select">
-                                        <option value="1">All Status</option>
-                                        <option value="2">New Car</option>
-                                        <option value="3">Used Car</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
                                     <label>Brand Name</label>
-                                    <select class="select">
-                                        <option value="1">All Brand</option>
-                                        <option value="2">BMW</option>
-                                        <option value="3">Ferrari</option>
-                                        <option value="4">Marcediz Benz</option>
-                                        <option value="5">Hyundai</option>
-                                        <option value="6">Nissan</option>
+                                    <select name="brand" class="select">
+                                        <option value="all">All Brands</option>
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label>Car Model</label>
-                                    <select class="select">
-                                        <option value="1">All Model</option>
-                                        <option value="2">3-Series </option>
-                                        <option value="3">Carrera</option>
-                                        <option value="4">G-TR</option>
-                                        <option value="3">Macan</option>
-                                        <option value="3">N-Series</option>
+                                    <label>Horsepower</label>
+                                    <select name="horsepower" class="select">
+                                        <option value="all">All Horsepower</option>
+                                        <option value="100">Up to 100 HP</option>
+                                        <option value="200">Up to 200 HP</option>
+                                        <option value="300">Up to 300 HP</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label>Choose Year</label>
-                                    <select class="select">
-                                        <option value="1">All Year</option>
-                                        <option value="2">2023</option>
-                                        <option value="3">2022</option>
-                                        <option value="4">2021</option>
-                                        <option value="5">2020</option>
+                                    <label>Torque</label>
+                                    <select name="torque" class="select">
+                                        <option value="all">All Torque</option>
+                                        <option value="200">Up to 200 Nm</option>
+                                        <option value="300">Up to 300 Nm</option>
+                                        <option value="400">Up to 400 Nm</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label>Choose Milieage</label>
-                                    <select class="select">
-                                        <option value="1">All Milieage</option>
-                                        <option value="2">2000 Miles</option>
-                                        <option value="3">3000 Miles</option>
-                                        <option value="4">4000 Miles</option>
-                                        <option value="5">5000 Miles</option>
+                                    <label>Model Year</label>
+                                    <select name="year" class="select">
+                                        <option value="all">All Years</option>
+                                        @foreach (\App\Models\Car::select('model_year')->distinct()->get() as $car)
+                                            <option value="{{ $car->model_year }}">{{ $car->model_year }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Choose Mileage</label>
+                                    <select name="mileage" class="select">
+                                        <option value="all">All Mileage</option>
+                                        <option value="2000">Up to 2000 Miles</option>
+                                        <option value="5000">Up to 5000 Miles</option>
+                                        <option value="10000">Up to 10,000 Miles</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label>Price Range</label>
-                                    <select class="select">
-                                        <option value="1">All Price</option>
-                                        <option value="2">$1,000 - $5,000</option>
-                                        <option value="3">$5,000 - $10,000</option>
-                                        <option value="4">$15,000 - $20,000</option>
-                                        <option value="5">$20,000 - $25,000</option>
-                                        <option value="6">$25,000 - $30,000</option>
+                                    <select name="price" class="select">
+                                        <option value="all">All Price</option>
+                                        <option value="1000-5000">$1,000 - $5,000</option>
+                                        <option value="5000-10000">$5,000 - $10,000</option>
+                                        <option value="15000-20000">$15,000 - $20,000</option>
+                                        <option value="20000-25000">$20,000 - $25,000</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label>Body Type</label>
-                                    <select class="select">
-                                        <option value="1">All Body Type</option>
-                                        <option value="2">Sedan</option>
-                                        <option value="5">Compact</option>
-                                        <option value="3">Coupe</option>
-                                        <option value="4">Wagon</option>
+                                    <label>Color</label>
+                                    <select name="color" class="select">
+                                        <option value="all">All Color</option>
+                                        @foreach (\App\Models\Car::select('color')->distinct()->get() as $car)
+                                            <option value="{{ $car->color }}">{{ $car->color }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-lg-3 align-self-end">
                                 <button class="theme-btn" type="submit"><span class="far fa-search"></span> Find Your
                                     Car</button>
                             </div>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -149,11 +152,12 @@
                     </div>
                 </div>
 
-                @foreach ($categories->slice(0, 8)->chunk(4) as $chunk) {{-- Lấy 8 danh mục, chia thành từng hàng 4 ảnh --}}
+                @foreach ($categories->slice(0, 8)->chunk(4) as $chunk)
                     <div class="row">
                         @foreach ($chunk as $category)
                             <div class="col-6 col-md-3">
-                                <a href="#" class="category-item wow fadeInUp" data-wow-delay=".25s">
+                                <a href="{{ route('user.shop.index', ['category_id' => $category->id]) }}"
+                                    class="category-item wow fadeInUp" data-wow-delay=".25s">
                                     <div class="category-img">
                                         <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}">
                                     </div>
@@ -163,6 +167,7 @@
                         @endforeach
                     </div>
                 @endforeach
+
             </div>
         </div>
 
@@ -318,7 +323,8 @@
                 <div class="row">
                     @foreach($brands as $index => $brand)
                         <div class="col-6 col-md-3 col-lg-2">
-                            <a href="#" class="brand-item wow fadeInUp" data-wow-delay="{{ 0.25 * ($index + 1) }}s">
+                            <a href="{{ route('user.shop.index', ['brand_id' => $brand->id]) }}" class="brand-item wow fadeInUp"
+                                data-wow-delay="{{ 0.25 * ($index + 1) }}s">
                                 <div class="brand-img">
                                     <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}">
                                 </div>
@@ -329,6 +335,7 @@
                 </div>
             </div>
         </div>
+
 
 
         <!-- car brand end-->
@@ -414,7 +421,7 @@
                                         </ul>
                                     </div>
                                     <h4 class="blog-title">
-                                        <a href="">{{ $blog->title }}</a>
+                                        <a href="{{ route('user.blog.detail', $blog->slug) }}">{{ $blog->title }}</a>
                                     </h4>
                                     <a class="theme-btn" href="{{ route('user.blog.detail', $blog->slug) }}">Read More<i
                                             class="fas fa-arrow-right-long"></i></a>

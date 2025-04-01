@@ -9,10 +9,15 @@
             $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
         @endphp
 
-        <div class="site-breadcrumb"
-            style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
+        <div class="site-breadcrumb">
             <div class="container">
-                <h2 class="breadcrumb-title">Listing Grid</h2>
+                <h2 class="breadcrumb-title">
+                    @if(isset($category))
+                        {{ $category->name }}
+                    @else
+                        Listing Grid
+                    @endif
+                </h2>
                 <ul class="breadcrumb-menu">
                     <li><a href="/">Home</a></li>
                     <li class="active">Shop Car</li>

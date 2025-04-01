@@ -73,4 +73,5 @@ class CarController extends Controller
         $car->delete();
         return redirect()->route('admin.cars.index')->with('success', 'Xe đã được xóa.');
     }
+    
 }

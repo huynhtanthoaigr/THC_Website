@@ -213,3 +213,5 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
 Route::get('/admin/dashboard', [CompanyProfileController::class, 'adminDashboard'])
     ->name('admin.dashboard');
+  
+    
