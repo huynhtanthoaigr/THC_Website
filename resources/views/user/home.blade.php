@@ -293,7 +293,7 @@
                                 </ul>
                             </div>
 
-                            <a href="#" class="theme-btn mt-4">
+                            <a href="/about" class="theme-btn mt-4">
                                 Discover More <i class="fas fa-arrow-right-long"></i>
                             </a>
                         </div>
