@@ -8,7 +8,7 @@
         <i class="fas fa-plus-circle"></i> Create New Blog
     </a>
 
-    {{-- Hiển thị tối đa 5 thông báo thành công --}}
+    {{-- Display up to 5 success messages --}}
     @if(session()->has('success_messages'))
         <div class="alert alert-success">
             <ul class="mb-0">
@@ -18,6 +18,11 @@
             </ul>
         </div>
     @endif
+
+    <!-- Search Form -->
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="🔍 Search blogs...">
+    </div>
 
     <div class="card shadow-lg">
         <div class="card-body">
@@ -35,7 +40,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="blogTable">
                         @foreach ($blogs as $blog)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -81,4 +86,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#blogTable tr");
+
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+</script>
+
 @endsection

@@ -3,17 +3,17 @@
 @section('content')
     <div class="container-fluid mt-4">
         <div class="row">
-            <div class=" mx-auto">
+            <div class="mx-auto">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="fw-bold">📂 Quản lý danh mục blog</h2>
+                    <h2 class="fw-bold">📂 Blog Category Management</h2>
                     <a href="{{ route('admin.blog_categories.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus-circle"></i> Thêm danh mục
+                        <i class="fas fa-plus-circle"></i> Add Category
                     </a>
                 </div>
 
-                <!-- Form tìm kiếm -->
+                <!-- Search Form -->
                 <div class="mb-3">
-                    <input type="text" id="searchInput" class="form-control" placeholder="🔍 Tìm kiếm danh mục...">
+                    <input type="text" id="searchInput" class="form-control" placeholder="🔍 Search category...">
                 </div>
 
                 <div class="table-responsive">
@@ -21,11 +21,11 @@
                         <thead class="table-dark text-center">
                             <tr>
                                 <th>ID</th>
-                                <th>Tên danh mục</th>
+                                <th>Category Name</th>
                                 <th>Slug</th>
-                                <th>Mô tả</th>
-                                <th>Hình ảnh </th>
-                                <th>Hành động</th>
+                                <th>Description</th>
+                                <th>Image</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="categoryTable">
@@ -40,21 +40,21 @@
                                             <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
                                                 width="80">
                                         @else
-                                            <span class="text-muted">Không có ảnh</span>
+                                            <span class="text-muted">No Image</span>
                                         @endif
                                     </td>
 
                                     <td class="text-center">
                                         <a href="{{ route('admin.blog_categories.edit', $category) }}"
                                             class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i> Sửa
+                                            <i class="fas fa-edit"></i> Edit
                                         </a>
                                         <form action="{{ route('admin.blog_categories.destroy', $category) }}" method="POST"
                                             class="d-inline">
                                             @csrf @method('DELETE')
                                             <button class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
-                                                <i class="fas fa-trash-alt"></i> Xóa
+                                                onclick="return confirm('Are you sure you want to delete this category?')">
+                                                <i class="fas fa-trash-alt"></i> Delete
                                             </button>
                                         </form>
                                     </td>
@@ -65,7 +65,7 @@
                 </div>
 
                 @if($categories->isEmpty())
-                    <div class="alert alert-info text-center mt-3">Không có danh mục nào.</div>
+                    <div class="alert alert-info text-center mt-3">No categories available.</div>
                 @endif
             </div>
         </div>

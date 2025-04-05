@@ -4,22 +4,28 @@
 <div class="container-fluid">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-envelope"></i> Danh sách tin nhắn</h5>
+            <h5 class="mb-0"><i class="fas fa-envelope"></i> Message List</h5>
         </div>
         <div class="card-body">
+
+            <!-- Search Bar -->
+            <div class="mb-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="🔍 Search messages...">
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
                             <th><i class="fas fa-hashtag"></i> ID</th>
-                            <th><i class="fas fa-user"></i> Người gửi</th>
+                            <th><i class="fas fa-user"></i> Sender</th>
                             <th><i class="fas fa-envelope"></i> Email</th>
-                            <th><i class="fas fa-comment"></i> Nội dung</th>
-                            <th><i class="fas fa-calendar-alt"></i> Ngày gửi</th>
-                            <th><i class="fas fa-cogs"></i> Thao tác</th>
+                            <th><i class="fas fa-comment"></i> Message</th>
+                            <th><i class="fas fa-calendar-alt"></i> Sent Date</th>
+                            <th><i class="fas fa-cogs"></i> Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="messageTable">
                         @foreach ($messages as $message)
                         <tr class="{{ $message->is_read ? 'table-secondary' : '' }}">
                             <td>{{ $message->id }}</td>
@@ -31,7 +37,7 @@
                                 <a href="{{ route('admin.messages.show', $message->id) }}" 
                                     class="btn btn-sm {{ $message->is_read ? 'btn-secondary' : 'btn-primary' }}">
                                     <i class="fas {{ $message->is_read ? 'fa-eye' : 'fa-eye-slash' }}"></i>
-                                    {{ $message->is_read ? 'Đã xem' : 'Xem' }}
+                                    {{ $message->is_read ? 'Viewed' : 'View' }}
                                 </a>
                             </td>
                         </tr>
@@ -46,4 +52,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#messageTable tr");
+
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+</script>
+
 @endsection
