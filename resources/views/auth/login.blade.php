@@ -3,15 +3,26 @@
 @section('content')
 <main class="main">
     <!-- breadcrumb -->
-    <div class="site-breadcrumb" style="background: url({{ asset('assets/img/breadcrumb/01.jpg') }})">
-        <div class="container">
-            <h2 class="breadcrumb-title">Login</h2>
-            <ul class="breadcrumb-menu">
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li class="active">Login</li>
-            </ul>
+    @php
+            $breadcrumb = \App\Models\Breadcrumb::first();
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+        @endphp
+
+        <div class="site-breadcrumb">
+            <div class="container">
+                <h2 class="breadcrumb-title">
+                    @if(isset($category))
+                        {{ $category->name }}
+                    @else
+                        Listing Grid
+                    @endif
+                </h2>
+                <ul class="breadcrumb-menu">
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Shop Car</li>
+                </ul>
+            </div>
         </div>
-    </div>
     <!-- breadcrumb end -->
 
     <!-- login area -->
@@ -20,7 +31,8 @@
             <div class="col-md-5 mx-auto">
                 <div class="login-form">
                     <div class="login-header">
-                        <img src="{{ asset('assets/img/logo/logo.png') }}" alt="">
+                    <img src="{{ asset('storage/' . ($company->logo ?? 'assets/img/logo/logo-light.png')) }}"
+                    alt="Company Logo">
                         <p>Login with your account</p>
                     </div>
                     <form action="{{ route('login') }}" method="POST">

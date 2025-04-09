@@ -358,15 +358,15 @@
                         <div class="testimonial-single">
                             <div class="testimonial-content">
                                 <div class="testimonial-author-img">
-                                    @if($review->car && $review->car->firstImage)
-                                        <img src="{{ asset('storage/' . $review->car->firstImage->image_url) }}"
-                                            alt="{{ $review->car->name }}" width="150">
+                                    @if($review->user && $review->user->avatar)
+                                        <img src="{{ asset('storage/avatars/' . $review->user->avatar) }}"
+                                            alt="{{ $review->user->name }}" width="150">
                                     @else
-                                        <img src="{{ asset('assets/img/default-product.png') }}" alt="Ảnh mặc định" width="150">
+                                        <img src="{{ asset('assets/img/default-user.png') }}" alt="Ảnh mặc định" width="150">
                                     @endif
-
-
                                 </div>
+
+
                                 <div class="testimonial-author-info">
                                     <h4>{{ $review->car->name }}</h4> <!-- Tên sản phẩm -->
                                     <p>{{ $review->user->name }}</p> <!-- Tên người đánh giá -->

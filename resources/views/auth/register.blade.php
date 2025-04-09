@@ -2,12 +2,23 @@
 
 @section('content')
     <main class="main">
-        <div class="site-breadcrumb" style="background: url({{ asset('assets/img/breadcrumb/01.jpg') }})">
+    @php
+            $breadcrumb = \App\Models\Breadcrumb::first();
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+        @endphp
+
+        <div class="site-breadcrumb">
             <div class="container">
-                <h2 class="breadcrumb-title">Register</h2>
+                <h2 class="breadcrumb-title">
+                    @if(isset($category))
+                        {{ $category->name }}
+                    @else
+                        Listing Grid
+                    @endif
+                </h2>
                 <ul class="breadcrumb-menu">
-                    <li><a href="{{ url('/') }}">Home</a></li>
-                    <li class="active">Register</li>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Shop Car</li>
                 </ul>
             </div>
         </div>
@@ -17,7 +28,8 @@
                 <div class="col-md-7 mx-auto">
                     <div class="login-form">
                         <div class="login-header">
-                            <img src="{{ asset('assets/img/logo/logo.png') }}" alt="">
+                        <img src="{{ asset('storage/' . ($company->logo ?? 'assets/img/logo/logo-light.png')) }}"
+                        alt="Company Logo">
                             <p>Create your Motex account</p>
                         </div>
 
