@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Controllers\Admin\SliderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -197,11 +198,12 @@ Route::get('/bypass', function () {
         'bypass' => 'Thiếu tham số bypass.',
     ]);
 });
-use App\Http\Controllers\Admin\SliderController;
+
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('sliders', SliderController::class)->names('admin.sliders');
 });
+
 
 use App\Http\Controllers\Admin\BreadcrumbController;
 
@@ -209,7 +211,6 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/breadcrumbs', [BreadcrumbController::class, 'index'])->name('admin.breadcrumbs.index');
     Route::post('/breadcrumbs/update', [BreadcrumbController::class, 'update'])->name('admin.breadcrumbs.update');
 });
-
 
 Route::get('/admin/dashboard', [CompanyProfileController::class, 'adminDashboard'])
     ->name('admin.dashboard');

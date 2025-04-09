@@ -6,9 +6,8 @@
     <main class="main">
         @php
             $breadcrumb = \App\Models\Breadcrumb::first();
-            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+            $backgroundImage = $breadcrumb ? asset('storage/' . $breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
         @endphp
-
         <div class="site-breadcrumb">
             <div class="container">
                 <h2 class="breadcrumb-title">
