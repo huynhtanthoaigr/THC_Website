@@ -3,26 +3,26 @@
 @section('content')
     <main class="main">
     @php
-            $breadcrumb = \App\Models\Breadcrumb::first();
-            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
-        @endphp
+    $breadcrumb = \App\Models\Breadcrumb::first();
+    $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+@endphp
 
-        <div class="site-breadcrumb">
-            <div class="container">
-                <h2 class="breadcrumb-title">
-                    @if(isset($category))
-                        {{ $category->name }}
-                    @else
-                        Listing Grid
-                    @endif
-                </h2>
-                <ul class="breadcrumb-menu">
-                    <li><a href="/">Home</a></li>
-                    <li class="active">Shop Car</li>
-                </ul>
-            </div>
-        </div>
-
+<div class="site-breadcrumb"
+     style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
+    <div class="container">
+        <h2 class="breadcrumb-title">
+            @if(isset($category))
+                {{ $category->name }}
+            @else
+            Resgister
+            @endif
+        </h2>
+        <ul class="breadcrumb-menu">
+            <li><a href="/">Home</a></li>
+            <li class="active">   Resgister</li>
+        </ul>
+    </div>
+</div>
         <div class="login-area py-120">
             <div class="container">
                 <div class="col-md-7 mx-auto">

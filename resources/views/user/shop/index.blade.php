@@ -4,26 +4,28 @@
 
 @section('content')
     <main class="main">
+
         @php
             $breadcrumb = \App\Models\Breadcrumb::first();
-            $backgroundImage = $breadcrumb ? asset('storage/' . $breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
+            $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
         @endphp
-        <div class="site-breadcrumb">
+
+        <div class="site-breadcrumb"
+            style="background: url('{{ $backgroundImage }}') no-repeat center center; background-size: cover;">
             <div class="container">
                 <h2 class="breadcrumb-title">
                     @if(isset($category))
                         {{ $category->name }}
                     @else
-                        Listing Grid
+                      Shop Car
                     @endif
                 </h2>
                 <ul class="breadcrumb-menu">
                     <li><a href="/">Home</a></li>
-                    <li class="active">Shop Car</li>
+                    <li class="active">Shop</li>
                 </ul>
             </div>
         </div>
-
         <!-- breadcrumb end -->
 
         <!-- car area -->
