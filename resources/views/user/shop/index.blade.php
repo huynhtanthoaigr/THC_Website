@@ -51,59 +51,80 @@
                             </div>
 
                             <form action="{{ route('user.shop.index') }}" method="GET">
-                                <!-- Lọc theo thương hiệu -->
-                                <div class="car-widget">
-                                    <h4 class="car-widget-title">Thương hiệu</h4>
-                                    <ul>
-                                        @foreach ($brands as $brand)
-                                            <li>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="brands[]"
-                                                        value="{{ $brand->id }}" {{ in_array($brand->id, request('brands', [])) ? 'checked' : '' }}>
-                                                    <label class="form-check-label">{{ $brand->name }}</label>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+    <!-- Lọc theo thương hiệu -->
+    <div class="car-widget">
+        <h4 class="car-widget-title">Thương hiệu</h4>
+        <ul>
+            @foreach ($brands as $brand)
+                <li>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="brands[]"
+                            value="{{ $brand->id }}" {{ in_array($brand->id, request('brands', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label">{{ $brand->name }}</label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+    </div>
 
-                                <!-- Lọc theo khoảng giá -->
-                                <div class="car-widget">
-                                    <h4 class="car-widget-title">Khoảng giá</h4>
-                                    <ul>
-                                        @foreach ($priceRanges as $range)
-                                            <li>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="price_range"
-                                                        data-min="{{ $range['min'] }}" data-max="{{ $range['max'] }}">
-                                                    <label class="form-check-label">{{ $range['label'] }}</label>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+    <!-- Lọc theo khoảng giá -->
+    <div class="car-widget">
+        <h4 class="car-widget-title">Khoảng giá</h4>
 
-                                <!-- Lọc theo hộp số -->
-                                <div class="car-widget">
-                                    <h4 class="car-widget-title">Hộp số</h4>
-                                    <ul>
-                                        @foreach ($transmissions as $trans)
-                                            <li>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="transmission[]"
-                                                        value="{{ $trans }}" {{ in_array($trans, request('transmission', [])) ? 'checked' : '' }}>
-                                                    <label class="form-check-label">{{ $trans }}</label>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+        <!-- Hidden inputs để submit min/max price -->
+        <input type="hidden" name="min_price" id="min_price" value="{{ request('min_price') }}">
+        <input type="hidden" name="max_price" id="max_price" value="{{ request('max_price') }}">
 
-                                <!-- Nút Lọc -->
-                                <div class="car-widget">
-                                    <button type="submit" class="btn btn-primary">Lọc</button>
-                                </div>
-                            </form>
+        <ul>
+            @foreach ($priceRanges as $range)
+                @php
+                    $checked = request('min_price') == $range['min'] &&
+                               (request('max_price') == $range['max'] || ($range['max'] === null && request('max_price') === null));
+                @endphp
+                <li>
+                    <div class="form-check">
+                        <input class="form-check-input price-range-radio" type="radio" name="price_range"
+                            data-min="{{ $range['min'] }}" data-max="{{ $range['max'] }}"
+                            {{ $checked ? 'checked' : '' }}>
+                        <label class="form-check-label">{{ $range['label'] }}</label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
+    <!-- Lọc theo hộp số -->
+    <div class="car-widget">
+        <h4 class="car-widget-title">Hộp số</h4>
+        <ul>
+            @foreach ($transmissions as $trans)
+                <li>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="transmission[]"
+                            value="{{ $trans }}" {{ in_array($trans, request('transmission', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label">{{ $trans }}</label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
+    <!-- Nút Lọc -->
+    <div class="car-widget">
+        <button type="submit" class="btn btn-primary">Lọc</button>
+    </div>
+</form>
+
+<!-- Script xử lý chọn khoảng giá -->
+<script>
+    document.querySelectorAll('.price-range-radio').forEach(radio => {
+        radio.addEventListener('change', function () {
+            document.getElementById('min_price').value = this.getAttribute('data-min');
+            document.getElementById('max_price').value = this.getAttribute('data-max');
+        });
+    });
+</script>
+
                         </div>
                     </div>
 
