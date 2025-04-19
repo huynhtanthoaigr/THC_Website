@@ -21,16 +21,15 @@ class HomeController extends Controller
         $about = About::first();
         $company = \App\Models\CompanyProfile::first();
         $reviews = Review::with(['user', 'car.firstImage'])->latest()->take(5)->get();
-        
+
         // Lọc danh sách xe
         $cars = Car::query()->with(['firstImage', 'details']);
-    
-      
+
         if ($request->has('brand') && $request->brand != 'all') {
             $cars->where('brand_id', $request->brand);
         }
         if ($request->has('year') && $request->year != 'all') {
-            $cars->where('model_year', $request->year);  // Lọc theo trường model_year
+            $cars->where('model_year', $request->year);
         }
         if ($request->has('mileage') && $request->mileage != 'all') {
             $cars->where('mileage', '<=', $request->mileage);
@@ -42,24 +41,24 @@ class HomeController extends Controller
         if ($request->has('color') && $request->color != 'all') {
             $cars->where('color', $request->color);
         }
-        
+
         // Lọc theo mã lực
         if ($request->has('horsepower') && $request->horsepower != 'all') {
             $cars->whereHas('details', function ($query) use ($request) {
                 $query->where('horsepower', '>=', $request->horsepower);
             });
         }
-    
+
         // Lọc theo mô-men xoắn
         if ($request->has('torque') && $request->torque != 'all') {
             $cars->whereHas('details', function ($query) use ($request) {
                 $query->where('torque', '>=', $request->torque);
             });
         }
-    
-        $cars = $cars->latest()->get();
-    
+
+        // 👉 Giới hạn chỉ hiển thị 8 chiếc xe mới nhất
+        $cars = $cars->latest()->take(8)->get();
+
         return view('user.home', compact('categories', 'cars', 'brands', 'blogs', 'about', 'reviews', 'company'));
     }
-    
 }

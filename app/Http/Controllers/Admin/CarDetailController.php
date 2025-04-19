@@ -10,12 +10,9 @@ class CarDetailController extends Controller
 {
     public function index()
     {
-        // Lấy tất cả dữ liệu từ bảng car_details
-        $carDetails = CarDetail::with('car')->paginate(10); // Hiển thị 10 bản ghi mỗi trang
-
+        $carDetails = CarDetail::with('car')->paginate(10);
         return view('admin.car_details.index', compact('carDetails'));
-    }
-    public function create()
+    }    public function create()
     {
         $cars = Car::doesntHave('carDetail')->get();
         return view('admin.car_details.create', compact('cars'));
