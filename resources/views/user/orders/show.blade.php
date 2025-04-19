@@ -2,7 +2,7 @@
 
 @section('content')
     <main class="main">
-    @php
+        @php
             $breadcrumb = \App\Models\Breadcrumb::first();
             $backgroundImage = $breadcrumb ? asset($breadcrumb->background_image) : asset('assets/img/breadcrumb/01.jpg');
         @endphp
@@ -38,17 +38,26 @@
                             <td><strong>Trạng thái:</strong></td>
                             <td>
                                 <span class="badge 
-                                        {{ $order->status == 'confirmed' ? 'bg-success' :
+                    {{ $order->status == 'confirmed' ? 'bg-success' :
         ($order->status == 'processing' ? 'bg-warning' : 'bg-secondary') }}">
                                     {{ ucfirst($order->status) }}
                                 </span>
                             </td>
                         </tr>
+
+                        @if($order->status == 'confirmed' && isset($company))
+                            <tr>
+                                <td><strong>Địa chỉ xem xe:</strong></td>
+                                <td>{{ $company->address }}</td>
+                            </tr>
+                        @endif
+
                         <tr>
                             <td><strong>Tổng tiền:</strong></td>
                             <td>{{ number_format($order->total_price, 0, ',', '.') }} VNĐ</td>
                         </tr>
                     </tbody>
+
                 </table>
             </div>
 
@@ -78,33 +87,32 @@
             </div>
 
             <div class="d-flex  gap-3 mt-4 mb-4">
-            @if ($order->status == 'confirmed')
-    @foreach ($order->orderItems as $item)
-        @php
-            $review = \App\Models\Review::where('user_id', auth()->id())
-                ->where('car_id', $item->car_id)
-                ->first();
-        @endphp
+                @if ($order->status == 'confirmed')
+                        @foreach ($order->orderItems as $item)
+                                @php
+                                    $review = \App\Models\Review::where('user_id', auth()->id())
+                                        ->where('car_id', $item->car_id)
+                                        ->first();
+                                @endphp
 
-        @if ($review)
-            <button class="btn btn-outline-secondary px-4 py-2 fw-bold rounded-pill" disabled>
-                <i class="fas fa-check-circle"></i> Đã đánh giá
-            </button>
-        @else
-            <a href="{{ route('user.reviews.create', ['car_id' => $item->car_id]) }}" 
-                class="btn btn-outline-primary px-4 py-2 fw-bold rounded-pill">
-                <i class="fas fa-star"></i> Đánh giá
-            </a>
-        @endif
-    @endforeach
-@endif
+                                @if ($review)
+                                    <button class="btn btn-outline-secondary px-4 py-2 fw-bold rounded-pill" disabled>
+                                        <i class="fas fa-check-circle"></i> Đã đánh giá
+                                    </button>
+                                @else
+                                    <a href="{{ route('user.reviews.create', ['car_id' => $item->car_id]) }}"
+                                        class="btn btn-outline-primary px-4 py-2 fw-bold rounded-pill">
+                                        <i class="fas fa-star"></i> Đánh giá
+                                    </a>
+                                @endif
+                        @endforeach
+                @endif
 
 
-    <a href="{{ route('user.orders.index') }}" 
-        class="btn btn-danger px-4 py-2 fw-bold rounded-pill">
-        <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
-    </a>
-</div>
+                <a href="{{ route('user.orders.index') }}" class="btn btn-danger px-4 py-2 fw-bold rounded-pill">
+                    <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
+                </a>
+            </div>
 
 
         </div>
