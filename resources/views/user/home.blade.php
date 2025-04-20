@@ -392,46 +392,48 @@
 
         <!-- blog area -->
         <div class="blog-area py-120">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 mx-auto">
-                        <div class="site-heading text-center">
-                            <span class="site-title-tagline"><i class="flaticon-drive"></i> Blog Mới Nhất</span>
-                            <h2 class="site-title">Tin Tức & <span>Bài Viết</span></h2>
-                            <div class="heading-divider"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    @foreach($blogs as $blog)
-                        <div class="col-md-6 col-lg-4">
-                            <div class="blog-item wow fadeInUp" data-wow-delay=".25s">
-                                <div class="blog-item-img">
-                                    <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}">
-                                </div>
-                                <div class="blog-item-info">
-                                    <div class="blog-item-meta">
-                                        <ul>
-                                            <li><i class="far fa-user-circle"></i>
-                                                By {{ $blog->author->name ?? 'Unknown' }}
-                                            </li>
-                                            <li><i class="far fa-calendar-alt"></i>
-                                                {{ $blog->created_at->format('d M, Y') }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <h4 class="blog-title">
-                                        <a href="{{ route('user.blog.detail', $blog->slug) }}">{{ $blog->title }}</a>
-                                    </h4>
-                                    <a class="theme-btn" href="{{ route('user.blog.detail', $blog->slug) }}">Read More<i
-                                            class="fas fa-arrow-right-long"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="site-heading text-center">
+                    <span class="site-title-tagline"><i class="flaticon-drive"></i> Latest Blogs</span>
+                    <h2 class="site-title">News & <span>Articles</span></h2>
+                    <div class="heading-divider"></div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            @foreach($blogs as $blog)
+                <div class="col-md-6 col-lg-4">
+                    <div class="blog-item wow fadeInUp" data-wow-delay=".25s">
+                        <div class="blog-item-img">
+                            <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}">
+                        </div>
+                        <div class="blog-item-info">
+                            <div class="blog-item-meta">
+                                <ul>
+                                    <li><i class="far fa-user-circle"></i>
+                                        By {{ $blog->author->name ?? 'Unknown' }}
+                                    </li>
+                                    <li><i class="far fa-calendar-alt"></i>
+                                        {{ $blog->created_at->format('d M, Y') }}
+                                    </li>
+                                </ul>
+                            </div>
+                            <h4 class="blog-title">
+                                <a href="{{ route('user.blog.detail', $blog->slug) }}">{{ $blog->title }}</a>
+                            </h4>
+                            <a class="theme-btn" href="{{ route('user.blog.detail', $blog->slug) }}">
+                                Read More <i class="fas fa-arrow-right-long"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
 
         <!-- blog area end -->
     </main>
